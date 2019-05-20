@@ -88,7 +88,7 @@ def run_processing():
         		    if ( i == 1 ):
         		    	image_flowDTVL1 = dtvl1.calc(gray_image_prev, gray_image, None)
         		    else:
-        			image_flowDTVL1 = image_flowDTVL1
+        		        image_flowDTVL1 = image_flowDTVL1
 
                     #Truncate Pixels between [-20, 20]
                     #image_flow1, imageflow2 = cv2.split(image_flowDTVL1)
