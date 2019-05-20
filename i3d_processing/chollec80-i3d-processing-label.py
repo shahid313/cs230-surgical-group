@@ -85,10 +85,10 @@ def run_processing():
                     #Run Optical Flow
                     dtvl1 = cv2.createOptFlow_DualTVL1()
                    
-		    if ( i == 1 ):
-		    	image_flowDTVL1 = dtvl1.calc(gray_image_prev, gray_image, None)
-		    else:
-			image_flowDTVL1 = image_flowDTVL1
+        		    if ( i == 1 ):
+        		    	image_flowDTVL1 = dtvl1.calc(gray_image_prev, gray_image, None)
+        		    else:
+        			image_flowDTVL1 = image_flowDTVL1
 
                     #Truncate Pixels between [-20, 20]
                     #image_flow1, imageflow2 = cv2.split(image_flowDTVL1)
@@ -124,24 +124,27 @@ def run_processing():
 
                 print("Processed video " + str(min) + " " + str(sec))
 
-                #labelling
-                for t in range(1, 7500):
-                    label_f.readline()
-
                 line = label_f.readline()
-                raw_label = line.split('	')[1][:-1]
+
+                if line != '\n':
+                    raw_label = line.split('	')[1][:-1]
+                else:
+                    raw_label = 6
 
                 label = label_decoder(raw_label)
                 label_title_rgb = "video_rgb" + video_id + "_" + str(min) + str(sec)
                 label_title_flow = "video_flow" + video_id + "_" + str(min) + str(sec)
-		list_file_rgb.write(label_title_rgb)
+		        list_file_rgb.write(label_title_rgb)
                 list_file_rgb.write('	')
                 list_file_rgb.write(str(label))
                 list_file_rgb.write("\n")
-		list_file_flow.write(label_title_flow)
-		list_file_flow.write('	')
-		list_file_flow.write(str(label))
-		list_file_flow.write("\n")
+        		list_file_flow.write(label_title_flow)
+        		list_file_flow.write('	')
+        		list_file_flow.write(str(label))
+        		list_file_flow.write("\n")
+
+                for t in range(1, 7500):
+                    label_f.readline()
 
 
     list_file_rgb.close()
