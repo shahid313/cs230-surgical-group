@@ -33,7 +33,7 @@ def run_processing():
         #video preprocess (should be higher dimension, but cut like this for now)
         subprocess.call(["ffmpeg", "-i", root_dir + "/video" + video_id + ".mp4", "-r", "25", "-s", "224x224", "-aspect", "4:3", "proc/video_process.mp4"])
 
-        for min in range(0, 25, 5):
+        for min in range(0, 26, 1):
             for sec in range(0, 60, 60):
 
                 subprocess.call(["rm", "-rf", "tmp"])
@@ -143,7 +143,7 @@ def run_processing():
         		list_file_flow.write(str(label))
         		list_file_flow.write("\n")
 
-                for t in range(1, 7500):
+                for t in range(1, 1500):
                     label_f.readline()
 
 
