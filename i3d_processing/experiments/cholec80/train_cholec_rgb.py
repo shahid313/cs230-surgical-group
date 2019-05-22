@@ -109,7 +109,7 @@ def run_training():
                         )
         sess.run(init)
         print("Initialization Done")
-        
+
         # Create summary writter
         tf.summary.scalar('accuracy', accuracy)
         tf.summary.scalar('rgb_loss', rgb_loss)
@@ -126,7 +126,7 @@ def run_training():
     test_writer = tf.summary.FileWriter('./visual_logs/test_rgb_scratch_10000_6_64_0.0001_decay', sess.graph)
     for step in xrange(FLAGS.max_steps):
         start_time = time.time()
-        rgb_train_images, flow_train_images, train_labels, _, _, _ = input_data.import_label_rgb(
+        rgb_train_images, flow_train_images, train_labels = input_data.import_label_rgb(
                       filename='../../list/chollec80_processed_list_rgb.txt',
                       batch_size=FLAGS.batch_size * gpu_num,
                       current_sample=step
