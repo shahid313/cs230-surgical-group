@@ -16,8 +16,8 @@ def run_processing():
 
     list_file_txt_rgb = "chollec80_processed_list_test_rgb.txt"
     list_file_txt_flow = "chollec80_processed_list_test_flow.txt"
-    subprocess.call(["rm", "-rf", "chollec80_processed_list_rgb.txt"])
-    subprocess.call(["rm", "-rf", "chollec80_processed_list_flow.txt"])
+    subprocess.call(["rm", "-rf", "chollec80_processed_list_test_rgb.txt"])
+    subprocess.call(["rm", "-rf", "chollec80_processed_list_test_flow.txt"])
     list_file_rgb = open(list_file_txt_rgb,"w+")
     list_file_flow = open(list_file_txt_flow,"w+")
 
