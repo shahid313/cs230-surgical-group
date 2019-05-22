@@ -32,10 +32,10 @@ from utils import *
 flags = tf.app.flags
 gpu_num = 1
 flags.DEFINE_integer('batch_size', 1, 'Batch size.')
-flags.DEFINE_integer('num_frame_per_clib', 16, 'Nummber of frames per clib')
+flags.DEFINE_integer('num_frame_per_clib', 250, 'Nummber of frames per clib')
 flags.DEFINE_integer('crop_size', 224, 'Crop_size')
 flags.DEFINE_integer('rgb_channels', 3, 'Channels for input')
-flags.DEFINE_integer('classics', 101, 'The num of class')
+flags.DEFINE_integer('classics', 7, 'The num of class')
 FLAGS = flags.FLAGS
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "3"
