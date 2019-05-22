@@ -127,7 +127,7 @@ def run_training():
         rgb_train_images, flow_train_images, train_labels, _, _, _ = input_data.import_label_rgb(
                       filename='../../list/chollec80_processed_list_rgb.txt',
                       batch_size=FLAGS.batch_size * gpu_num,
-                      step
+                      current_sample=step
                       )
         sess.run(train_op, feed_dict={
                       rgb_images_placeholder: rgb_train_images,
