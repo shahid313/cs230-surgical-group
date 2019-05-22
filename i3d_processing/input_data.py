@@ -240,8 +240,6 @@ def import_label_rgb(filename, batch_size, current_sample):
 
         print ("load shape")
         print (str(tmp_rgb.shape))
-        print ("rgb data shape")
-        print (str(rgb_data.shape))
         
         #get the correct label
         label.append(int(tmp_label))
