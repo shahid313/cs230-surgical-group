@@ -237,6 +237,11 @@ def import_label_rgb(filename, batch_size, current_sample):
         rgb_txt = "../../chollec80/chollec80_processed_data/" + dirname + ".npy"
         tmp_rgb = np.load(rgb_txt)
         rgb_data.append(tmp_rgb)
+
+        print ("load shape")
+        print (str(tmp_rgb.shape))
+        print ("rgb data shape")
+        print (str(rgb_data.shape))
         
         #get the correct label
         label.append(int(tmp_label))
@@ -253,6 +258,9 @@ def import_label_rgb(filename, batch_size, current_sample):
     np_arr_rgb_data = np.array(rgb_data).astype(np.float32)
     np_arr_flow_data = np.array(flow_data).astype(np.float32)
     np_arr_label = np.array(label).astype(np.int64)
+
+    print ("final rgb shape")
+    print (str(np_arr_rgb_data.shape))
 
     return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)
 
