@@ -125,7 +125,7 @@ def run_training():
     for step in xrange(FLAGS.max_steps):
         start_time = time.time()
         rgb_train_images, flow_train_images, train_labels, _, _, _ = input_data.import_label_rgb(
-                      filename='../../list/ucf_list/train_flow.list',
+                      filename='../../list/chollec80_processed_list_rgb.txt',
                       batch_size=FLAGS.batch_size * gpu_num,
                       step
                       )
@@ -151,7 +151,7 @@ def run_training():
             train_writer.add_summary(summary, step)
             print('Validation Data Eval:')
             rgb_val_images, flow_val_images, val_labels, _, _, _ = input_data.read_clip_and_label(
-                            filename='../../list/ucf_list/test_flow.list',
+                            filename='../../list/chollec80_processed_list_rgb.txt',
                             batch_size=FLAGS.batch_size * gpu_num,
                             num_frames_per_clip=FLAGS.num_frame_per_clib,
                             crop_size=FLAGS.crop_size,
