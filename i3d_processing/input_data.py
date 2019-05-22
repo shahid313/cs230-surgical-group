@@ -286,8 +286,8 @@ def import_label_flow(filename, batch_size, current_sample):
             flow_data.append(flow_data[-1])
             label.append(int(label[-1]))
 
-np_arr_rgb_data = np.array(rgb_data).astype(np.float32)
-np_arr_flow_data = np.array(flow_data).astype(np.float32)
-np_arr_label = np.array(label).astype(np.int64)
+	np_arr_rgb_data = np.array(rgb_data).astype(np.float32)
+	np_arr_flow_data = np.array(flow_data).astype(np.float32)
+	np_arr_label = np.array(label).astype(np.int64)
 
-return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)
+	return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)

@@ -108,6 +108,8 @@ def run_training():
                         config=tf.ConfigProto(allow_soft_placement=True)
                         )
         sess.run(init)
+        print("Initialization Done")
+        
         # Create summary writter
         tf.summary.scalar('accuracy', accuracy)
         tf.summary.scalar('rgb_loss', rgb_loss)
