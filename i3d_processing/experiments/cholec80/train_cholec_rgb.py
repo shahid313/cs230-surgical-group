@@ -35,7 +35,7 @@ gpu_num = 1
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
 flags.DEFINE_integer('max_steps', 10000, 'Number of steps to run trainer.')
 flags.DEFINE_integer('batch_size', 1, 'Batch size.')
-flags.DEFINE_integer('num_frame_per_clib', 64, 'Nummber of frames per clib')
+flags.DEFINE_integer('num_frame_per_clib', 250, 'Nummber of frames per clib')
 flags.DEFINE_integer('crop_size', 224, 'Crop_size')
 flags.DEFINE_integer('rgb_channels', 3, 'RGB_channels for input')
 flags.DEFINE_integer('flow_channels', 2, 'FLOW_channels for input')
