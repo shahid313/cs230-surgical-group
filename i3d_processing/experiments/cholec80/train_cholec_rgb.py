@@ -53,7 +53,7 @@ def run_training():
     # Create model directory
     if not os.path.exists(model_save_dir):
         os.makedirs(model_save_dir)
-    rgb_pre_model_save_dir = "/home/project/I3D/I3D/checkpoints/rgb_scratch"
+    rgb_pre_model_save_dir = "../../checkpoints/rgb_scratch"
 
     with tf.Graph().as_default():
         global_step = tf.get_variable(
@@ -115,6 +115,7 @@ def run_training():
         tf.summary.scalar('rgb_loss', rgb_loss)
         tf.summary.scalar('learning_rate', learning_rate)
         merged = tf.summary.merge_all()
+
     # load pre_train models
     ckpt = tf.train.get_checkpoint_state(rgb_pre_model_save_dir)
     if ckpt and ckpt.model_checkpoint_path:
@@ -140,7 +141,8 @@ def run_training():
         print('Step %d: %.3f sec' % (step, duration))
 
         # Save a checkpoint and evaluate the model periodically.
-        if step % 10 == 0 or (step + 1) == FLAGS.max_steps:
+        #if step % 10 == 0 or (step + 1) == FLAGS.max_steps:
+        if (step == 100):
             print('Training Data Eval:')
             summary, acc, loss_rgb = sess.run(
                             [merged, accuracy, rgb_loss],
