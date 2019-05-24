@@ -155,7 +155,7 @@ def run_training():
             train_writer.add_summary(summary, step)
             print('Validation Data Eval:')
             rgb_val_images, flow_val_images, val_labels = input_data.import_label_rgb(
-                            filename='../../list/cchollec80_processed_list_test_rgb.txt',
+                            filename='../../list/chollec80_processed_list_test_rgb.txt',
                             batch_size=FLAGS.batch_size * gpu_num,
                             current_sample=step
                             )
