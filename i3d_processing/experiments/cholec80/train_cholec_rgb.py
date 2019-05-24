@@ -142,7 +142,7 @@ def run_training():
 
         # Save a checkpoint and evaluate the model periodically.
         #if step % 10 == 0 or (step + 1) == FLAGS.max_steps:
-        if (step == 100):
+        if (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             print('Training Data Eval:')
             summary, acc, loss_rgb = sess.run(
                             [merged, accuracy, rgb_loss],
@@ -154,8 +154,8 @@ def run_training():
             print("rgb_loss: " + "{:.5f}".format(loss_rgb))
             train_writer.add_summary(summary, step)
             print('Validation Data Eval:')
-            rgb_val_images, flow_val_images, val_labels, _, _, _ = input_data.read_clip_and_label(
-                            filename='../../list/chollec80_processed_list_rgb.txt',
+            rgb_val_images, flow_val_images, val_labels = input_data.import_label_rgb(
+                            filename='../../list/cchollec80_processed_list_test_rgb.txt',
                             batch_size=FLAGS.batch_size * gpu_num,
                             num_frames_per_clip=FLAGS.num_frame_per_clib,
                             crop_size=FLAGS.crop_size,
@@ -170,7 +170,7 @@ def run_training():
                                       })
             print("accuracy: " + "{:.5f}".format(acc))
             test_writer.add_summary(summary, step)
-        if (step+1) % 3000 == 0 or (step + 1) == FLAGS.max_steps:
+        if (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             saver.save(sess, os.path.join(model_save_dir, 'i3d_ucf_model'), global_step=step)
     print("done")
 
