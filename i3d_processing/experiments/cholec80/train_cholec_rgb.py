@@ -142,7 +142,7 @@ def run_training():
 
         # Save a checkpoint and evaluate the model periodically.
         #if step % 10 == 0 or (step + 1) == FLAGS.max_steps:
-        if (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
+        if step == 0 or (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             print('Training Data Eval:')
             summary, acc, loss_rgb = sess.run(
                             [merged, accuracy, rgb_loss],
@@ -157,9 +157,7 @@ def run_training():
             rgb_val_images, flow_val_images, val_labels = input_data.import_label_rgb(
                             filename='../../list/cchollec80_processed_list_test_rgb.txt',
                             batch_size=FLAGS.batch_size * gpu_num,
-                            num_frames_per_clip=FLAGS.num_frame_per_clib,
-                            crop_size=FLAGS.crop_size,
-                            shuffle=True
+                            current_sample=step
                             )
             summary, acc = sess.run(
                             [merged, accuracy],
