@@ -45,7 +45,7 @@ def run_training():
     # Get the sets of images and labels for training, validation, and
     # Tell TensorFlow that the model will be built into the default Graph.
     pre_model_save_dir = "./models/rgb_scratch_10000_6_64_0.0001_decay"
-    test_list_file = '../../list/ucf_list/test_flow.list'
+    test_list_file = '../../list/chollec80_processed_list_test_rgb.txt'
     file = list(open(test_list_file, 'r'))
     num_test_videos = len(file)
     print("Number of test videos={}".format(num_test_videos))
@@ -90,12 +90,10 @@ def run_training():
         predicts = []
         top1 = False
         while True:
-            val_images, _, val_labels, s_index, is_end = input_test.read_clip_and_label(
-                            filename=file[step],
+            val_images, _, val_labels, s_index, is_end = input_test.import_label_rgb(
+                            filename=test_list_file,
                             batch_size=FLAGS.batch_size * gpu_num,
-                            s_index=s_index,
-                            num_frames_per_clip=FLAGS.num_frame_per_clib,
-                            crop_size=FLAGS.crop_size,
+                            current_sample=step
                             )
             predict = sess.run(norm_score,
                                feed_dict={

@@ -41,7 +41,7 @@ flags.DEFINE_integer('rgb_channels', 3, 'RGB_channels for input')
 flags.DEFINE_integer('flow_channels', 2, 'FLOW_channels for input')
 flags.DEFINE_integer('classics', 7, 'The num of class')
 FLAGS = flags.FLAGS
-model_save_dir = './models/rgb_scratch_10000_6_64_0.0001_decay'
+model_save_dir = './models/rgb_scratch_10000_6_64_0.0001_decay_model1'
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
@@ -169,7 +169,7 @@ def run_training():
             print("accuracy: " + "{:.5f}".format(acc))
             test_writer.add_summary(summary, step)
         if (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
-            saver.save(sess, os.path.join(model_save_dir, 'i3d_ucf_model'), global_step=step)
+            saver.save(sess, os.path.join(model_save_dir, 'i3d_cholec_model'), global_step=step)
     print("done")
 
 
