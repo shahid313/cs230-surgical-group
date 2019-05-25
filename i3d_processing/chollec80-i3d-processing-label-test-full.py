@@ -98,9 +98,9 @@ def run_processing():
                     #Run Optical Flow
                     dtvl1 = cv2.createOptFlow_DualTVL1()
                    
-        		    if ( i == 1 ):    
+                    if ( i == 1 ):    
         		    	image_flowDTVL1 = dtvl1.calc(gray_image_prev, gray_image, None)
-        		    else:
+                    else:
         		        image_flowDTVL1 = dtvl1.calc(gray_image_prev, gray_image, None)
 
                     #Truncate Pixels between [-20, 20]
