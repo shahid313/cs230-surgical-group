@@ -177,7 +177,7 @@ def run_training():
             rgb_val_images, flow_val_images, val_labels = input_data.import_label_rgb(
                             filename=test_file,
                             batch_size=FLAGS.batch_size * gpu_num,
-                            current_sample=step
+                            current_sample=sample
                             )
             summary, acc = sess.run(
                             [merged, accuracy],
