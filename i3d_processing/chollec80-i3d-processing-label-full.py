@@ -151,14 +151,14 @@ def run_processing():
                 label = label_decoder(raw_label)
                 label_title_rgb = "video_rgb" + video_id + "_" + str(hour) + str(minute)
                 label_title_flow = "video_flow" + video_id + "_" + str(hour) + str(minute)
-		        list_file_rgb.write(label_title_rgb)
+                list_file_rgb.write(label_title_rgb)
                 list_file_rgb.write('	')
                 list_file_rgb.write(str(label))
                 list_file_rgb.write("\n")
-        		list_file_flow.write(label_title_flow)
-        		list_file_flow.write('	')
-        		list_file_flow.write(str(label))
-        		list_file_flow.write("\n")
+                list_file_flow.write(label_title_flow)
+                list_file_flow.write('	')
+                list_file_flow.write(str(label))
+                list_file_flow.write("\n")
 
                 #skip until the next label
                 #for this, two minutes, ideally make this variable length
