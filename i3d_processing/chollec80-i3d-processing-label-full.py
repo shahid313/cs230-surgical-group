@@ -48,6 +48,7 @@ def run_processing():
         limit_line = time_limit_f.readline()
         last_time = limit_line.split('    ')[0][:-1]
 
+        print ("THE LAST TIME IS THIS:")
         print (last_time)
 
         for hour in range(0, hour_max, 1):
