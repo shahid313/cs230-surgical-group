@@ -46,10 +46,18 @@ def run_processing():
             time_limit_f.readline()
 
         limit_line = time_limit_f.readline()
-        last_time = limit_line.split('    ')[0][:-1]
+        info = limit_line.split()
+        last_time = info[0]
 
         print ("THE LAST TIME IS THIS:")
         print (last_time)
+
+        print (last_time[0])
+        print (last_time[1])
+        print (last_time[2])
+        print (last_time[3])
+        print (last_time[4])
+        print (last_time[5])
 
         for hour in range(0, hour_max, 1):
             for minute in range(0, min_max, 2):
