@@ -38,7 +38,7 @@ def run_processing():
 
         time_limit_f = open(label_txt, "r")
 
-        for l in range(1, time_limit_len)
+        for l in range(1, time_limit_len):
             time_limit_f.readline()
 
         limit_line = time_limit_f.readline()
