@@ -28,6 +28,8 @@ import numpy as np
 from i3d import InceptionI3d
 from utils import *
 from tensorflow.python import pywrap_tensorflow
+from numpy.random import seed
+from numpy.random import randint
 
 # Basic model parameters as external flags.
 flags = tf.app.flags
@@ -42,6 +44,8 @@ flags.DEFINE_integer('flow_channels', 2, 'FLOW_channels for input')
 flags.DEFINE_integer('classics', 7, 'The num of class')
 FLAGS = flags.FLAGS
 model_save_dir = './models/rgb_scratch_10000_6_64_0.0001_decay_model1'
+train_file = '../../list/chollec80_processed_list_rgb.txt'
+test_file = '../../list/chollec80_processed_list_test_rgb.txt'
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
@@ -49,6 +53,9 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 def run_training():
     # Get the sets of images and labels for training, validation, and
     # Tell TensorFlow that the model will be built into the default Graph.
+
+    #seed RNG
+    seed(1)
 
     # Create model directory
     if not os.path.exists(model_save_dir):
@@ -123,15 +130,26 @@ def run_training():
         rgb_saver.restore(sess, ckpt.model_checkpoint_path)
         print("load complete!")
 
-    train_writer = tf.summary.FileWriter('./visual_logs/train_rgb_scratch_10000_6_64_0.0001_decay', sess.graph)
-    test_writer = tf.summary.FileWriter('./visual_logs/test_rgb_scratch_10000_6_64_0.0001_decay', sess.graph)
+    train_writer = tf.summary.FileWriter('./visual_logs/train_rgb_scratch_10000_6_64_0.0001_decay_model1', sess.graph)
+    test_writer = tf.summary.FileWriter('./visual_logs/test_rgb_scratch_10000_6_64_0.0001_decay_model1', sess.graph)
+
+    file = list(open(train_file, 'r'))
+    num_test_videos = len(file)
+
     for step in xrange(FLAGS.max_steps):
         start_time = time.time()
+
+        #Get a sample to test
+        sample_a = randint(0, num_test_videos, 1)
+        sample = sample_a[0]
+
+        #get the processed data
         rgb_train_images, flow_train_images, train_labels = input_data.import_label_rgb(
-                      filename='../../list/chollec80_processed_list_rgb.txt',
+                      filename=train_file,
                       batch_size=FLAGS.batch_size * gpu_num,
-                      current_sample=step
+                      current_sample=sample
                       )
+        #actually train the model
         sess.run(train_op, feed_dict={
                       rgb_images_placeholder: rgb_train_images,
                       labels_placeholder: train_labels,
@@ -155,7 +173,7 @@ def run_training():
             train_writer.add_summary(summary, step)
             print('Validation Data Eval:')
             rgb_val_images, flow_val_images, val_labels = input_data.import_label_rgb(
-                            filename='../../list/chollec80_processed_list_test_rgb.txt',
+                            filename=test_file,
                             batch_size=FLAGS.batch_size * gpu_num,
                             current_sample=step
                             )
