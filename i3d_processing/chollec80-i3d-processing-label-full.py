@@ -49,23 +49,11 @@ def run_processing():
         info = limit_line.split()
         last_time = info[0]
 
-        print ("THE LAST TIME IS THIS:")
-        print (last_time)
-
-        print (last_time[0])
-        print (last_time[1])
-        print (last_time[2])
-        print (last_time[3])
-        print (last_time[4])
-
         last_hour = int(last_time[0] + last_time[1])
         last_min = int(last_time[3] + last_time[4])
 
-        print (str(last_hour))
-        print (str(last_min))
-
-        for hour in range(0, last_hour, 1):
-            for minute in range(0, last_min, 2):
+        for hour in range(0, (last_hour+1), 1):
+            for minute in range(0, (last_min+1), 2):
 
                 subprocess.call(["rm", "-rf", "tmp"])
                 subprocess.call(["mkdir", "tmp"])

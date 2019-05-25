@@ -42,12 +42,14 @@ def run_processing():
             time_limit_f.readline()
 
         limit_line = time_limit_f.readline()
-        last_time = limit_line.split('    ')[0][:-1]
+        info = limit_line.split()
+        last_time = info[0]
 
-        print (last_time)
+        last_hour = int(last_time[0] + last_time[1])
+        last_min = int(last_time[3] + last_time[4])
 
-        for hour in range(0, hour_max, 1):
-            for minute in range(0, min_max, 2):
+        for hour in range(0, (last_hour+1), 1):
+            for minute in range(0, (last_min+1), 2):
 
                 subprocess.call(["rm", "-rf", "tmp"])
                 subprocess.call(["mkdir", "tmp"])
