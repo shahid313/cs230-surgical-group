@@ -258,9 +258,6 @@ def import_label_rgb(filename, batch_size, current_sample):
     np_arr_flow_data = np.array(flow_data).astype(np.float32)
     np_arr_label = np.array(label).astype(np.int64)
 
-    print ("final rgb shape")
-    print (str(np_arr_rgb_data.shape))
-
     return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)
 
 def import_label_flow(filename, batch_size, current_sample):
