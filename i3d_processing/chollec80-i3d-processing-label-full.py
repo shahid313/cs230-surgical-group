@@ -57,10 +57,15 @@ def run_processing():
         print (last_time[2])
         print (last_time[3])
         print (last_time[4])
-        print (last_time[5])
 
-        for hour in range(0, hour_max, 1):
-            for minute in range(0, min_max, 2):
+        last_hour = int(last_time[0] + last_time[1])
+        last_min = int(last_time[3] + last_time[4])
+
+        print (str(last_hour))
+        print (str(last_min))
+
+        for hour in range(0, last_hour, 1):
+            for minute in range(0, last_min, 2):
 
                 subprocess.call(["rm", "-rf", "tmp"])
                 subprocess.call(["mkdir", "tmp"])
