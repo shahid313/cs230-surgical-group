@@ -28,6 +28,8 @@ import numpy as np
 from i3d import InceptionI3d
 from utils import *
 from tensorflow.python import pywrap_tensorflow
+from numpy.random import seed
+from numpy.random import randint
 
 # Basic model parameters as external flags.
 flags = tf.app.flags
@@ -35,13 +37,15 @@ gpu_num = 1
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
 flags.DEFINE_integer('max_steps', 10000, 'Number of steps to run trainer.')
 flags.DEFINE_integer('batch_size', 1, 'Batch size.')
-flags.DEFINE_integer('num_frame_per_clib', 64, 'Nummber of frames per clib')
+flags.DEFINE_integer('num_frame_per_clib', 250, 'Nummber of frames per clib')
 flags.DEFINE_integer('crop_size', 224, 'Crop_size')
 flags.DEFINE_integer('rgb_channels', 3, 'RGB_channels for input')
 flags.DEFINE_integer('flow_channels', 2, 'FLOW_channels for input')
 flags.DEFINE_integer('classics', 7, 'The num of class')
 FLAGS = flags.FLAGS
-model_save_dir = './models/rgb_scratch_10000_6_64_0.0001_decay'
+model_save_dir = './models/rgb_scratch_10000_6_64_0.0001_decay_model1'
+train_file = '../../list/chollec80_processed_list_rgb.txt'
+test_file = '../../list/chollec80_processed_list_test_rgb.txt'
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
@@ -50,10 +54,13 @@ def run_training():
     # Get the sets of images and labels for training, validation, and
     # Tell TensorFlow that the model will be built into the default Graph.
 
+    #seed RNG
+    seed(1)
+
     # Create model directory
     if not os.path.exists(model_save_dir):
         os.makedirs(model_save_dir)
-    rgb_pre_model_save_dir = "/home/project/I3D/I3D/checkpoints/rgb_scratch"
+    rgb_pre_model_save_dir = "../../checkpoints/rgb_scratch"
 
     with tf.Graph().as_default():
         global_step = tf.get_variable(
@@ -108,11 +115,14 @@ def run_training():
                         config=tf.ConfigProto(allow_soft_placement=True)
                         )
         sess.run(init)
+        print("Initialization Done")
+
         # Create summary writter
         tf.summary.scalar('accuracy', accuracy)
         tf.summary.scalar('rgb_loss', rgb_loss)
         tf.summary.scalar('learning_rate', learning_rate)
         merged = tf.summary.merge_all()
+
     # load pre_train models
     ckpt = tf.train.get_checkpoint_state(rgb_pre_model_save_dir)
     if ckpt and ckpt.model_checkpoint_path:
@@ -120,15 +130,28 @@ def run_training():
         rgb_saver.restore(sess, ckpt.model_checkpoint_path)
         print("load complete!")
 
-    train_writer = tf.summary.FileWriter('./visual_logs/train_rgb_scratch_10000_6_64_0.0001_decay', sess.graph)
-    test_writer = tf.summary.FileWriter('./visual_logs/test_rgb_scratch_10000_6_64_0.0001_decay', sess.graph)
+    train_writer = tf.summary.FileWriter('./visual_logs/train_rgb_scratch_10000_6_64_0.0001_decay_model1', sess.graph)
+    test_writer = tf.summary.FileWriter('./visual_logs/test_rgb_scratch_10000_6_64_0.0001_decay_model1', sess.graph)
+
+    file = list(open(train_file, 'r'))
+    num_test_videos = len(file)
+
     for step in xrange(FLAGS.max_steps):
         start_time = time.time()
-        rgb_train_images, flow_train_images, train_labels, _, _, _ = input_data.import_label_rgb(
-                      filename='../../list/chollec80_processed_list_rgb.txt',
+
+        #Get a sample to test
+        sample_a = randint(0, num_test_videos, 1)
+        sample = sample_a[0]
+
+        print ("Training sample: %d" % (sample))
+
+        #get the processed data
+        rgb_train_images, flow_train_images, train_labels = input_data.import_label_rgb(
+                      filename=train_file,
                       batch_size=FLAGS.batch_size * gpu_num,
-                      step
+                      current_sample=sample
                       )
+        #actually train the model
         sess.run(train_op, feed_dict={
                       rgb_images_placeholder: rgb_train_images,
                       labels_placeholder: train_labels,
@@ -138,7 +161,8 @@ def run_training():
         print('Step %d: %.3f sec' % (step, duration))
 
         # Save a checkpoint and evaluate the model periodically.
-        if step % 10 == 0 or (step + 1) == FLAGS.max_steps:
+        #if step % 10 == 0 or (step + 1) == FLAGS.max_steps:
+        if step == 0 or (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             print('Training Data Eval:')
             summary, acc, loss_rgb = sess.run(
                             [merged, accuracy, rgb_loss],
@@ -150,12 +174,10 @@ def run_training():
             print("rgb_loss: " + "{:.5f}".format(loss_rgb))
             train_writer.add_summary(summary, step)
             print('Validation Data Eval:')
-            rgb_val_images, flow_val_images, val_labels, _, _, _ = input_data.read_clip_and_label(
-                            filename='../../list/chollec80_processed_list_rgb.txt',
+            rgb_val_images, flow_val_images, val_labels = input_data.import_label_rgb(
+                            filename=test_file,
                             batch_size=FLAGS.batch_size * gpu_num,
-                            num_frames_per_clip=FLAGS.num_frame_per_clib,
-                            crop_size=FLAGS.crop_size,
-                            shuffle=True
+                            current_sample=sample
                             )
             summary, acc = sess.run(
                             [merged, accuracy],
@@ -166,8 +188,8 @@ def run_training():
                                       })
             print("accuracy: " + "{:.5f}".format(acc))
             test_writer.add_summary(summary, step)
-        if (step+1) % 3000 == 0 or (step + 1) == FLAGS.max_steps:
-            saver.save(sess, os.path.join(model_save_dir, 'i3d_ucf_model'), global_step=step)
+        if (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
+            saver.save(sess, os.path.join(model_save_dir, 'i3d_cholec_model'), global_step=step)
     print("done")
 
 

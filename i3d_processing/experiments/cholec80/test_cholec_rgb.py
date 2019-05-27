@@ -32,10 +32,10 @@ from utils import *
 flags = tf.app.flags
 gpu_num = 1
 flags.DEFINE_integer('batch_size', 1, 'Batch size.')
-flags.DEFINE_integer('num_frame_per_clib', 16, 'Nummber of frames per clib')
+flags.DEFINE_integer('num_frame_per_clib', 250, 'Nummber of frames per clib')
 flags.DEFINE_integer('crop_size', 224, 'Crop_size')
 flags.DEFINE_integer('rgb_channels', 3, 'Channels for input')
-flags.DEFINE_integer('classics', 101, 'The num of class')
+flags.DEFINE_integer('classics', 7, 'The num of class')
 FLAGS = flags.FLAGS
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "3"
@@ -44,8 +44,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 def run_training():
     # Get the sets of images and labels for training, validation, and
     # Tell TensorFlow that the model will be built into the default Graph.
-    pre_model_save_dir = "./models/rgb_scratch_10000_6_64_0.0001_decay"
-    test_list_file = '../../list/ucf_list/test_flow.list'
+    pre_model_save_dir = "./models/rgb_scratch_10000_6_64_0.0001_decay_model1_train1"
+    test_list_file = '../../list/chollec80_processed_list_test_rgb.txt'
     file = list(open(test_list_file, 'r'))
     num_test_videos = len(file)
     print("Number of test videos={}".format(num_test_videos))
@@ -89,31 +89,34 @@ def run_training():
         s_index = 0
         predicts = []
         top1 = False
-        while True:
-            val_images, _, val_labels, s_index, is_end = input_test.read_clip_and_label(
-                            filename=file[step],
-                            batch_size=FLAGS.batch_size * gpu_num,
-                            s_index=s_index,
-                            num_frames_per_clip=FLAGS.num_frame_per_clib,
-                            crop_size=FLAGS.crop_size,
-                            )
-            predict = sess.run(norm_score,
-                               feed_dict={
-                                            rgb_images_placeholder: val_images,
-                                            labels_placeholder: val_labels,
-                                            is_training: False
-                                            })
-            predicts.append(np.array(predict).astype(np.float32).reshape(FLAGS.classics))
-            if is_end:
-                avg_pre = np.mean(predicts, axis=0).tolist()
-                top1 = (avg_pre.index(max(avg_pre))==val_labels)
-                top1_list.append(top1)
-                break
+        val_images, _, val_labels = input_test.import_label_rgb(
+                        filename=test_list_file,
+                        batch_size=FLAGS.batch_size * gpu_num,
+                        current_sample=step
+                        )
+        predict = sess.run(norm_score,
+                           feed_dict={
+                                        rgb_images_placeholder: val_images,
+                                        labels_placeholder: val_labels,
+                                        is_training: False
+                                        })
+        predicts.append(np.array(predict).astype(np.float32).reshape(FLAGS.classics))
+        avg_pre = np.mean(predicts, axis=0).tolist()
+        top1_test = avg_pre.index(max(avg_pre))
+        top1 = (top1_test==val_labels)
+        top1_list.append(top1)
         duration = time.time() - start_time
+
+        print (predict)
+        print (top1_test)
+        print (top1)
+        print (val_labels)
+        print("Test step %d done" % (step))
+
         print('TOP_1_ACC in test: %f , time use: %.3f' % (top1, duration))
-    print(len(top1_list))
-    print('TOP_1_ACC in test: %f' % np.mean(top1_list))
-    print("done")
+        print(len(top1_list))
+        print('TOP_1_ACC in test: %f' % np.mean(top1_list))
+        print("done")
 
 
 def main(_):

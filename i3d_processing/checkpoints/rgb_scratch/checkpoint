@@ -1,2 +1,2 @@
-model_checkpoint_path: "/home/project/I3D/I3D/checkpoints/rgb_scratch/model.ckpt"
-all_model_checkpoint_paths: "/home/project/I3D/I3D/checkpoints/rgb_scratch/model.ckpt"
+model_checkpoint_path: "/home/surajm72/cs230-surgical-group/i3d_processing/checkpoints/rgb_scratch/model.ckpt"
+all_model_checkpoint_paths: "/home/surajm72/cs230-surgical-group/i3d_processing/checkpoints/rgb_scratch/model.ckpt"

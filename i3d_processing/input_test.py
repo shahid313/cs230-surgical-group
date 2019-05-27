@@ -105,3 +105,44 @@ def read_clip_and_label(filename, batch_size, s_index, num_frames_per_clip=64, c
     np_arr_label = np.array(label).astype(np.int64)
 
     return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size), s_index+num_frames_per_clip, is_end
+
+
+def import_label_rgb(filename, batch_size, current_sample):
+    lines = open(filename, 'r')
+    rgb_data = []
+    flow_data = []
+    label = []
+    
+    lines = list(lines)
+    
+    for i in range(current_sample, (current_sample+batch_size)):
+        line = lines[i].strip('\n').split()
+        dirname = line[0]
+        tmp_label = line[1]
+        
+        #load the .npy file for rgb
+        rgb_txt = "../../chollec80/chollec80_processed_data/" + dirname + ".npy"
+        tmp_rgb = np.load(rgb_txt)
+
+        if (i == current_sample):
+            rgb_data = tmp_rgb
+        else:
+            rgb_data = np.concatenate((rgb_data, tmp_rgb), axis=0)
+        
+        #get the correct label
+        label.append(int(tmp_label))
+    
+    #make the arrays nice
+    valid_len = len(rgb_data)
+    pad_len = batch_size - valid_len
+    if pad_len:
+        for i in range(pad_len):
+            rgb_data.append(rgb_data[-1])
+            flow_data.append(flow_data[-1])
+            label.append(int(label[-1]))
+
+    np_arr_rgb_data = np.array(rgb_data).astype(np.float32)
+    np_arr_flow_data = np.array(flow_data).astype(np.float32)
+    np_arr_label = np.array(label).astype(np.int64)
+
+    return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)

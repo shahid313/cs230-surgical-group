@@ -6,16 +6,18 @@ import cv2
 def run_processing():
 
     dirs = set([])
-    video_ids = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
-                 "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"
-                 "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"]
+    #video_ids = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+    #             "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"
+    #             "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"]
+
+    video_ids = ["61", "62", "63", "64", "65", "66", "67", "68", "69", "70"]
     root_dir = "chollec80_raw_data"
     destination_dir = "chollec80_processed_data"
 
-    list_file_txt_rgb = "chollec80_processed_list_rgb.txt"
-    list_file_txt_flow = "chollec80_processed_list_flow.txt"
-    subprocess.call(["rm", "-rf", "chollec80_processed_list_rgb.txt"])
-    subprocess.call(["rm", "-rf", "chollec80_processed_list_flow.txt"])
+    list_file_txt_rgb = "chollec80_processed_list_test_rgb.txt"
+    list_file_txt_flow = "chollec80_processed_list_test_flow.txt"
+    subprocess.call(["rm", "-rf", "chollec80_processed_list_test_rgb.txt"])
+    subprocess.call(["rm", "-rf", "chollec80_processed_list_test_flow.txt"])
     list_file_rgb = open(list_file_txt_rgb,"w+")
     list_file_flow = open(list_file_txt_flow,"w+")
 
@@ -85,9 +87,9 @@ def run_processing():
                     #Run Optical Flow
                     dtvl1 = cv2.createOptFlow_DualTVL1()
                    
-        		    if ( i == 1 ):    
+                    if ( i == 1 ):    
         		    	image_flowDTVL1 = dtvl1.calc(gray_image_prev, gray_image, None)
-        		    else:
+                    else:
         		        image_flowDTVL1 = dtvl1.calc(gray_image_prev, gray_image, None)
 
                     #Truncate Pixels between [-20, 20]
@@ -134,14 +136,14 @@ def run_processing():
                 label = label_decoder(raw_label)
                 label_title_rgb = "video_rgb" + video_id + "_" + str(min) + str(sec)
                 label_title_flow = "video_flow" + video_id + "_" + str(min) + str(sec)
-		        list_file_rgb.write(label_title_rgb)
+                list_file_rgb.write(label_title_rgb)
                 list_file_rgb.write('	')
                 list_file_rgb.write(str(label))
                 list_file_rgb.write("\n")
-        		list_file_flow.write(label_title_flow)
-        		list_file_flow.write('	')
-        		list_file_flow.write(str(label))
-        		list_file_flow.write("\n")
+                list_file_flow.write(label_title_flow)
+                list_file_flow.write('	')
+                list_file_flow.write(str(label))
+                list_file_flow.write("\n")
 
                 for t in range(1, 1500):
                     label_f.readline()

@@ -234,9 +234,13 @@ def import_label_rgb(filename, batch_size, current_sample):
         tmp_label = line[1]
         
         #load the .npy file for rgb
-        rgb_txt = dirname + ".npy"
+        rgb_txt = "../../chollec80/chollec80_processed_data/" + dirname + ".npy"
         tmp_rgb = np.load(rgb_txt)
-        rgb_data.append(tmp_rgb)
+
+        if (i == current_sample):
+        	rgb_data = tmp_rgb
+        else:
+        	rgb_data = np.concatenate((rgb_data, tmp_rgb), axis=0)
         
         #get the correct label
         label.append(int(tmp_label))
@@ -272,7 +276,11 @@ def import_label_flow(filename, batch_size, current_sample):
         #load the .npy file for rgb
         flow_txt = dirname + ".npy"
         tmp_flow = np.load(rgb_txt)
-        flow_data.append(tmp_rgb)
+        
+        if (i == current_sample):
+    		flow_data = tmp_flow
+        else:
+        	flow_data = np.concatenate((flow_data, tmp_flow), axis=0)
         
         #get the correct label
         label.append(int(tmp_label))
@@ -286,8 +294,8 @@ def import_label_flow(filename, batch_size, current_sample):
             flow_data.append(flow_data[-1])
             label.append(int(label[-1]))
 
-np_arr_rgb_data = np.array(rgb_data).astype(np.float32)
-np_arr_flow_data = np.array(flow_data).astype(np.float32)
-np_arr_label = np.array(label).astype(np.int64)
+	np_arr_rgb_data = np.array(rgb_data).astype(np.float32)
+	np_arr_flow_data = np.array(flow_data).astype(np.float32)
+	np_arr_label = np.array(label).astype(np.int64)
 
-return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)
+	return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)
