@@ -94,7 +94,7 @@ def run_training():
                         batch_size=FLAGS.batch_size * gpu_num,
                         current_sample=step
                         )
-        predict, acc = sess.run([norm_score, accuracy],
+        predict = sess.run(norm_score,
                            feed_dict={
                                         rgb_images_placeholder: val_images,
                                         labels_placeholder: val_labels,
@@ -102,7 +102,8 @@ def run_training():
                                         })
         predicts.append(np.array(predict).astype(np.float32).reshape(FLAGS.classics))
 
-        print("accuracy: " + "{:.5f}".format(acc))
+        print (predict)
+        print (val_labels)
         print("Test step %d done" % (step))
 
     avg_pre = np.mean(predicts, axis=0).tolist()
