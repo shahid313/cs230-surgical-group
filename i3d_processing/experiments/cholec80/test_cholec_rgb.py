@@ -101,19 +101,19 @@ def run_training():
                                         is_training: False
                                         })
         predicts.append(np.array(predict).astype(np.float32).reshape(FLAGS.classics))
+        avg_pre = np.mean(predicts, axis=0).tolist()
+        top1 = (avg_pre.index(max(avg_pre))==val_labels)
+        top1_list.append(top1)
+        duration = time.time() - start_time
 
-        print (predict)
+        print (top1)
         print (val_labels)
         print("Test step %d done" % (step))
 
-    avg_pre = np.mean(predicts, axis=0).tolist()
-    top1 = (avg_pre.index(max(avg_pre))==val_labels)
-    top1_list.append(top1)
-    duration = time.time() - start_time
-    print('TOP_1_ACC in test: %f , time use: %.3f' % (top1, duration))
-    print(len(top1_list))
-    print('TOP_1_ACC in test: %f' % np.mean(top1_list))
-    print("done")
+        print('TOP_1_ACC in test: %f , time use: %.3f' % (top1, duration))
+        print(len(top1_list))
+        print('TOP_1_ACC in test: %f' % np.mean(top1_list))
+        print("done")
 
 
 def main(_):
