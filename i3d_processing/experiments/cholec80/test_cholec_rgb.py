@@ -102,6 +102,7 @@ def run_training():
                                         })
         predicts.append(np.array(predict).astype(np.float32).reshape(FLAGS.classics))
 
+        print("Prediction: %f" % (predict))
         print("Test step %d done" % (step))
 
     avg_pre = np.mean(predicts, axis=0).tolist()
