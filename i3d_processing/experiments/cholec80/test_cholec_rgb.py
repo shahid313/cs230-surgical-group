@@ -102,10 +102,12 @@ def run_training():
                                         })
         predicts.append(np.array(predict).astype(np.float32).reshape(FLAGS.classics))
         avg_pre = np.mean(predicts, axis=0).tolist()
-        top1 = (avg_pre.index(max(avg_pre))==val_labels)
+        top1_test = avg_pre.index(max(avg_pre))
+        top1 = (top1_test==val_labels)
         top1_list.append(top1)
         duration = time.time() - start_time
 
+        print (top1_test)
         print (top1)
         print (val_labels)
         print("Test step %d done" % (step))
