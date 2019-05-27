@@ -107,6 +107,7 @@ def run_training():
         top1_list.append(top1)
         duration = time.time() - start_time
 
+        print (predict)
         print (top1_test)
         print (top1)
         print (val_labels)
