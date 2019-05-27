@@ -94,7 +94,7 @@ def run_training():
                         batch_size=FLAGS.batch_size * gpu_num,
                         current_sample=step
                         )
-        predict, acc = sess.run([norm_score, accuracy]
+        predict, acc = sess.run([norm_score, accuracy],
                            feed_dict={
                                         rgb_images_placeholder: val_images,
                                         labels_placeholder: val_labels,
