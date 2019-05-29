@@ -43,7 +43,7 @@ flags.DEFINE_integer('rgb_channels', 3, 'RGB_channels for input')
 flags.DEFINE_integer('flow_channels', 2, 'FLOW_channels for input')
 flags.DEFINE_integer('classics', 7, 'The num of class')
 FLAGS = flags.FLAGS
-model_save_dir = './models/rgb_scratch_10000_6_64_0.0001_decay_model1_resume'
+model_save_dir = './models/rgb_scratch_10000_6_64_0.0001_decay_model1_resume_next'
 train_file = '../../list/chollec80_processed_list_rgb_full.txt'
 test_file = '../../list/chollec80_processed_list_test_rgb_full.txt'
 
@@ -60,7 +60,7 @@ def run_training():
     # Create model directory
     if not os.path.exists(model_save_dir):
         os.makedirs(model_save_dir)
-    rgb_pre_model_save_dir = "../../checkpoints/rgb_scratch"
+    rgb_pre_model_save_dir = "./models/rgb_scratch_10000_6_64_0.0001_decay_model1_resume"
 
     with tf.Graph().as_default():
         global_step = tf.get_variable(
