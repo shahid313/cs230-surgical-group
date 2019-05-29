@@ -188,7 +188,7 @@ def run_training():
                                       })
             print("accuracy: " + "{:.5f}".format(acc))
             test_writer.add_summary(summary, step)
-        if (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
+        if step == 0 or (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             saver.save(sess, os.path.join(model_save_dir, 'i3d_cholec_model'), global_step=step)
     print("done")
 
