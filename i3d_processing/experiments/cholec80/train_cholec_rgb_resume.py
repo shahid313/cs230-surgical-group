@@ -35,6 +35,7 @@ from numpy.random import randint
 # Basic model parameters as external flags.
 flags = tf.app.flags
 gpu_num = 1
+offset = 101 #train offset of steps already done
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
 flags.DEFINE_integer('max_steps', 10000, 'Number of steps to run trainer.')
 flags.DEFINE_integer('batch_size', 1, 'Batch size.')
@@ -138,6 +139,7 @@ def run_training():
     num_test_videos = len(file)
 
     for step in xrange(FLAGS.max_steps):
+        step = offset + step
         start_time = time.time()
 
         #Get a sample to test
