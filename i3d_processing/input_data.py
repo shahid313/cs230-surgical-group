@@ -234,7 +234,7 @@ def import_label_rgb(filename, batch_size, current_sample):
         tmp_label = line[1]
         
         #load the .npy file for rgb
-        rgb_txt = "../../chollec80/chollec80_processed_data/" + dirname + ".npy"
+        rgb_txt = "../../chollec80/chollec80_processed_data_full/" + dirname + ".npy"
         tmp_rgb = np.load(rgb_txt)
 
         if (i == current_sample):
