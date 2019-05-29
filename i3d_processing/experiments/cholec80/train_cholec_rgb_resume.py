@@ -45,7 +45,7 @@ flags.DEFINE_integer('classics', 7, 'The num of class')
 FLAGS = flags.FLAGS
 model_save_dir = './models/rgb_scratch_10000_6_64_0.0001_decay_model1_resume_next'
 train_file = '../../list/chollec80_processed_list_rgb_full.txt'
-test_file = '../../list/chollec80_processed_list_test_rgb_full.txt'
+test_file = '../../list/chollec80_processed_list_test_rgb.txt'
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
@@ -177,6 +177,9 @@ def run_training():
             print("rgb_loss: " + "{:.5f}".format(loss_rgb))
             train_writer.add_summary(summary, step)
             print('Validation Data Eval:')
+
+            sample_a = randint(0, 100, 1)
+            sample = sample_a[0]
             rgb_val_images, flow_val_images, val_labels = input_data.import_label_rgb(
                             filename=test_file,
                             batch_size=FLAGS.batch_size * gpu_num,
