@@ -143,6 +143,9 @@ def run_training():
         sample_a = randint(0, num_test_videos, 1)
         sample = sample_a[0]
 
+        #put to train linearly
+        sample = step
+
         print ("Training sample: %d" % (sample))
 
         #get the processed data
