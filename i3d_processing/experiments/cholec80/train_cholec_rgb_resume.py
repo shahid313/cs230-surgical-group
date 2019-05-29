@@ -23,6 +23,7 @@ import numpy
 from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
 import input_data
+import input_test
 import math
 import numpy as np
 from i3d import InceptionI3d
@@ -178,9 +179,9 @@ def run_training():
             train_writer.add_summary(summary, step)
             print('Validation Data Eval:')
 
-            sample_a = randint(0, 100, 1)
+            sample_a = randint(0, 50, 1)
             sample = sample_a[0]
-            rgb_val_images, flow_val_images, val_labels = input_data.import_label_rgb(
+            rgb_val_images, flow_val_images, val_labels = input_test.import_label_rgb(
                             filename=test_file,
                             batch_size=FLAGS.batch_size * gpu_num,
                             current_sample=sample
