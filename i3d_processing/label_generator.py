@@ -47,7 +47,7 @@ def run_processing():
         last_min = int(last_time[3] + last_time[4])
 
         for hour in range(0, (last_hour+1), 1):
-            for minute in range(0, (last_min+1), 2):
+            for minute in range(0, (last_min-1), 2):
 
                 line = label_f.readline()
 
