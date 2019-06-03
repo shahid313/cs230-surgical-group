@@ -86,6 +86,8 @@ def run_training():
                         FLAGS.rgb_channels,
                         FLAGS.flow_channels
                         )
+        
+        class_weights_placeholder = tf.placeholder(tf.float32, shape=(batch_size))
 
         learning_rate = tf.train.exponential_decay(FLAGS.learning_rate, global_step, decay_steps=3000, decay_rate=0.1, staircase=True)
         opt_rgb = tf.train.AdamOptimizer(learning_rate)
@@ -98,7 +100,8 @@ def run_training():
                                     )(rgb_images_placeholder, is_training)
         rgb_loss = tower_loss(
                                 rgb_logit,
-                                labels_placeholder
+                                labels_placeholder,
+                                class_weights_placeholder
                                 )
         accuracy = tower_acc(rgb_logit, labels_placeholder)
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
@@ -165,10 +168,15 @@ def run_training():
                       batch_size=FLAGS.batch_size * gpu_num,
                       current_sample=sample
                       )
+
+        #assign weights to fight class imbalance
+        weight_labels = input_data.assign_class_weights(train_labels)
+
         #actually train the model
         sess.run(train_op, feed_dict={
                       rgb_images_placeholder: rgb_train_images,
                       labels_placeholder: train_labels,
+                      class_weights_placeholder : weight_labels,
                       is_training: True
                       })
         duration = time.time() - start_time
@@ -182,6 +190,7 @@ def run_training():
                             [merged, accuracy, rgb_loss],
                             feed_dict={rgb_images_placeholder: rgb_train_images,
                                        labels_placeholder: train_labels,
+                                       class_weights_placeholder: weight_labels,
                                        is_training: False
                                       })
             print("accuracy: " + "{:.5f}".format(acc))
@@ -203,6 +212,7 @@ def run_training():
                             feed_dict={
                                         rgb_images_placeholder: rgb_val_images,
                                         labels_placeholder: val_labels,
+                                        class_weights_placeholder: weight_labels,
                                         is_training: False
                                       })
             print("accuracy: " + "{:.5f}".format(acc))

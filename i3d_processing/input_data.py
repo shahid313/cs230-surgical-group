@@ -27,7 +27,7 @@ import numpy as np
 import cv2
 import time
 
-
+class_imbalance_weights = [1, .7, .8, .9, 1, 1, 1]
 
 def sample_data(ori_arr, num_frames_per_clip, sample_rate):
     ret_arr = []
@@ -299,3 +299,11 @@ def import_label_flow(filename, batch_size, current_sample):
 	np_arr_label = np.array(label).astype(np.int64)
 
 	return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)
+
+def assign_class_weights(labels):
+    weights = []
+
+    for label in range(labels):
+        weights.append(class_imbalance_weights[label])
+
+    return weights
