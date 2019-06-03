@@ -157,8 +157,8 @@ def run_processing():
                     list_file_flow.write("\n")
 
                     #skip until the next label
-                    #for this, two minutes, ideally make this variable length
-                    for t in range(1, 3000):
+                    #for this, 30s, ideally make this variable length
+                    for t in range(1, 750):
                         label_f.readline()
 
 

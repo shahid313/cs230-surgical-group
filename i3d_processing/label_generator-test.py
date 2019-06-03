@@ -43,7 +43,7 @@ def run_processing():
         last_min = int(last_time[3] + last_time[4])
 
         for hour in range(0, (last_hour+1), 1):
-            for minute in range(0, (last_min+1), 2):
+            for minute in range(0, (last_min), 2):
 
                 line = label_f.readline()
 
@@ -65,8 +65,8 @@ def run_processing():
                 list_file_flow.write("\n")
 
                 #skip until the next label
-                #for this, two minutes, ideally make this variable length
-                for t in range(1, 3000):
+                #for this, 30s, ideally make this variable length
+                for t in range(1, 750):
                     label_f.readline()
 
 
