@@ -53,17 +53,13 @@ def run_processing():
         last_min = int(last_time[3] + last_time[4])
 
         for hour in range(0, (last_hour+1), 1):
-            for minute in range(0, (last_min+1), 2):
+            for minute in range(0, (last_min), 2):
 
                 subprocess.call(["rm", "-rf", "tmp"])
                 subprocess.call(["mkdir", "tmp"])
 
-                if ( (minute+2) == 60 ):
-                    next_hour = 1
-                    next_min = 0
-                else:
-                    next_hour = hour
-                    next_min = minute+2
+                next_hour = hour
+                next_min = minute
 
                 # cut videos in 10s samples
                 subprocess.call(["ffmpeg", "-i", "proc/video_process.mp4", "-ss", ('%02d' % hour)+":"+('%02d' % minute)+":"+"00", "-to", ('%02d' % next_hour)+":"+('%02d' % next_min)+":"+"10", "tmp/video_process_cropped.mp4"])
