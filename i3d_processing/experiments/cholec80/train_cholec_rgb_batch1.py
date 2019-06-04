@@ -191,17 +191,18 @@ def run_training():
                       current_sample=sample
                       )
 
-        #assign weights to fight class imbalance
-        weight_labels = input_data.assign_class_weights(train_labels)
-
         #actually train the model
         if (exists == 1):
+            #assign weights to fight class imbalance
+            weight_labels = input_data.assign_class_weights(train_labels)
+
             sess.run(train_op, feed_dict={
                           rgb_images_placeholder: rgb_train_images,
                           labels_placeholder: train_labels,
                           class_weights_placeholder: weight_labels,
                           is_training: True
                           })
+            
         duration = time.time() - start_time
         print('Step %d: %.3f sec' % (step, duration))
 
