@@ -185,7 +185,7 @@ def run_training():
         print ("Training sample: %d" % (sample))
 
         #get the processed data
-        rgb_train_images, flow_train_images, train_labels = input_data.import_label_rgb(
+        rgb_train_images, flow_train_images, train_labels, exists = input_data.import_label_rgb(
                       filename=train_file,
                       batch_size=FLAGS.batch_size * gpu_num,
                       current_sample=sample
@@ -195,12 +195,13 @@ def run_training():
         weight_labels = input_data.assign_class_weights(train_labels)
 
         #actually train the model
-        sess.run(train_op, feed_dict={
-                      rgb_images_placeholder: rgb_train_images,
-                      labels_placeholder: train_labels,
-                      class_weights_placeholder: weight_labels,
-                      is_training: True
-                      })
+        if (exists == 1):
+            sess.run(train_op, feed_dict={
+                          rgb_images_placeholder: rgb_train_images,
+                          labels_placeholder: train_labels,
+                          class_weights_placeholder: weight_labels,
+                          is_training: True
+                          })
         duration = time.time() - start_time
         print('Step %d: %.3f sec' % (step, duration))
 
@@ -224,21 +225,23 @@ def run_training():
             #TODO: Fix to select random sample from entire test list
             sample_a = randint(0, 50, 1)
             sample = sample_a[0]
-            rgb_val_images, flow_val_images, val_labels = input_test.import_label_rgb(
+            rgb_val_images, flow_val_images, val_labels, exists = input_test.import_label_rgb(
                             filename=test_file,
                             batch_size=FLAGS.batch_size * gpu_num,
                             current_sample=sample
                             )
-            summary, acc = sess.run(
-                            [merged, accuracy],
-                            feed_dict={
-                                        rgb_images_placeholder: rgb_val_images,
-                                        labels_placeholder: val_labels,
-                                        class_weights_placeholder: weight_labels,
-                                        is_training: False
-                                      })
-            print("accuracy: " + "{:.5f}".format(acc))
-            test_writer.add_summary(summary, step)
+
+            if (exists == 1):
+                summary, acc = sess.run(
+                                [merged, accuracy],
+                                feed_dict={
+                                            rgb_images_placeholder: rgb_val_images,
+                                            labels_placeholder: val_labels,
+                                            class_weights_placeholder: weight_labels,
+                                            is_training: False
+                                          })
+                print("accuracy: " + "{:.5f}".format(acc))
+                test_writer.add_summary(summary, step)
         if step == 0 or (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             saver.save(sess, os.path.join(model_save_dir, 'i3d_cholec_model'), global_step=step)
     print("done")

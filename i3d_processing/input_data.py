@@ -225,17 +225,23 @@ def import_label_rgb(filename, batch_size, current_sample):
     rgb_data = []
     flow_data = []
     label = []
+    exists = 1
     
     lines = list(lines)
     
     for i in range(current_sample, (current_sample+batch_size)):
-        line = lines[i].strip('\n').split()
+        line = lines[i-1].strip('\n').split()
         dirname = line[0]
         tmp_label = line[1]
         
         #load the .npy file for rgb
         rgb_txt = "../../chollec80/chollec80_processed_data_full/" + dirname + ".npy"
-        tmp_rgb = np.load(rgb_txt)
+
+        if os.path.isfile(rgb_txt):
+            tmp_rgb = np.load(rgb_txt)
+        else
+            exists = 0
+            break
 
         if (i == current_sample):
         	rgb_data = tmp_rgb
@@ -246,19 +252,24 @@ def import_label_rgb(filename, batch_size, current_sample):
         label.append(int(tmp_label))
     
     #make the arrays nice
-    valid_len = len(rgb_data)
-    pad_len = batch_size - valid_len
-    if pad_len:
-        for i in range(pad_len):
-            rgb_data.append(rgb_data[-1])
-            flow_data.append(flow_data[-1])
-            label.append(int(label[-1]))
+    if (exists == 1):
+        valid_len = len(rgb_data)
+        pad_len = batch_size - valid_len
+        if pad_len:
+            for i in range(pad_len):
+                rgb_data.append(rgb_data[-1])
+                flow_data.append(flow_data[-1])
+                label.append(int(label[-1]))
 
-    np_arr_rgb_data = np.array(rgb_data).astype(np.float32)
-    np_arr_flow_data = np.array(flow_data).astype(np.float32)
-    np_arr_label = np.array(label).astype(np.int64)
+        np_arr_rgb_data = np.array(rgb_data).astype(np.float32)
+        np_arr_flow_data = np.array(flow_data).astype(np.float32)
+        np_arr_label = np.array(label).astype(np.int64)
+    else:
+        np_arr_rgb_data = []
+        np_arr_flow_data = []
+        np_arr_label = []
 
-    return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)
+    return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size), exists
 
 def import_label_flow(filename, batch_size, current_sample):
     lines = open(filename, 'r')
