@@ -87,7 +87,7 @@ def run_training():
                         FLAGS.flow_channels
                         )
         
-        class_weights_placeholder = tf.placeholder(tf.float32, shape=(batch_size))
+        class_weights_placeholder = tf.placeholder(tf.float32, shape=(FLAGS.batch_size))
 
         learning_rate = tf.train.exponential_decay(FLAGS.learning_rate, global_step, decay_steps=3000, decay_rate=0.1, staircase=True)
         opt_rgb = tf.train.AdamOptimizer(learning_rate)
