@@ -123,12 +123,12 @@ def run_processing():
                     flow_video_r = flow_video.reshape(1, 50, 224, 224, 2)
 
                     #when done, copy .npy files for one 10s video clip, RGB and Flow
-                    destination_rgb = destination_dir + "/video_rgb" + video_id + "_" + str(hour) + str(minute) + ".npy"
-                    destination_flow = destination_dir + "/video_flow" + video_id + "_" + str(hour) + str(minute) + ".npy"
+                    destination_rgb = destination_dir + "/video_rgb" + video_id + "_" + str(hour) + str(minute) + str(second) + ".npy"
+                    destination_flow = destination_dir + "/video_flow" + video_id + "_" + str(hour) + str(minute) + str(second) + ".npy"
                     np.save(destination_rgb, rgb_video_r)
                     np.save(destination_flow, flow_video_r)
 
-                    print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute))
+                    print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute) + " " str(second))
 
                     if (((minute+1) >= last_min) and (hour == last_hour)):
                         break

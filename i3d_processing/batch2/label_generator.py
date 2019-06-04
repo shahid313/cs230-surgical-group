@@ -47,36 +47,37 @@ def run_processing():
         last_min = int(last_time[3] + last_time[4])
 
         for hour in range(0, (last_hour+1), 1):
-            for minute in range(0, (60), 2):
+            for minute in range(0, (60), 1):
+                for second in range(0, (60), 30):
 
-                line = label_f.readline()
+                    line = label_f.readline()
 
-                if line != '\n':
-                    raw_label = line.split('	')[1][:-1]
-                else:
-                    raw_label = 6
+                    if line != '\n':
+                        raw_label = line.split('	')[1][:-1]
+                    else:
+                        raw_label = 6
 
-                label = label_decoder(raw_label)
-                label_title_rgb = "video_rgb" + video_id + "_" + str(hour) + str(minute)
-                label_title_flow = "video_flow" + video_id + "_" + str(hour) + str(minute)
-                list_file_rgb.write(label_title_rgb)
-                list_file_rgb.write('	')
-                list_file_rgb.write(str(label))
-                list_file_rgb.write("\n")
-                list_file_flow.write(label_title_flow)
-                list_file_flow.write('	')
-                list_file_flow.write(str(label))
-                list_file_flow.write("\n")
+                    label = label_decoder(raw_label)
+                    label_title_rgb = "video_rgb" + video_id + "_" + str(hour) + str(minute) + str(second)
+                    label_title_flow = "video_flow" + video_id + "_" + str(hour) + str(minute) + str(second)
+                    list_file_rgb.write(label_title_rgb)
+                    list_file_rgb.write('	')
+                    list_file_rgb.write(str(label))
+                    list_file_rgb.write("\n")
+                    list_file_flow.write(label_title_flow)
+                    list_file_flow.write('	')
+                    list_file_flow.write(str(label))
+                    list_file_flow.write("\n")
 
-                #skip until the next label
-                #for this, two minutes, ideally make this variable length
-                for t in range(1, 3000):
-                    label_f.readline()
+                    #skip until the next label
+                    #for this, 30 sec, ideally make this variable length
+                    for t in range(1, 750):
+                        label_f.readline()
 
-                #if true, exit the loops
+                    #if true, exit the loops
 
-                if (((minute+2) >= last_min) and (hour == last_hour)):
-                    break
+                    if (((minute+1) >= last_min) and (hour == last_hour) and (second == 30)):
+                        break
 
 
     list_file_rgb.close()
