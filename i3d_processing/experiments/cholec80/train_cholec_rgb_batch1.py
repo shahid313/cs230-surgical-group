@@ -98,7 +98,7 @@ def run_training():
                                     spatial_squeeze=True,
                                     final_endpoint='Logits'
                                     )(rgb_images_placeholder, is_training)
-        rgb_loss = tower_loss(
+        rgb_loss = tower_loss_weighted(
                                 rgb_logit,
                                 labels_placeholder,
                                 class_weights_placeholder
