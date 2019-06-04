@@ -202,27 +202,28 @@ def run_training():
                           class_weights_placeholder: weight_labels,
                           is_training: True
                           })
-            
+
         duration = time.time() - start_time
         print('Step %d: %.3f sec' % (step, duration))
 
         # Save a checkpoint and evaluate the model periodically.
         #if step % 10 == 0 or (step + 1) == FLAGS.max_steps:
         if step == 0 or (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
-            print('Training Data Eval:')
-            summary, acc, loss_rgb = sess.run(
-                            [merged, accuracy, rgb_loss],
-                            feed_dict={rgb_images_placeholder: rgb_train_images,
-                                       labels_placeholder: train_labels,
-                                       class_weights_placeholder: weight_labels,
-                                       is_training: False
-                                      })
-            print("accuracy: " + "{:.5f}".format(acc))
-            print("rgb_loss: " + "{:.5f}".format(loss_rgb))
-            train_writer.add_summary(summary, step)
+
+            if (exists == 1):
+                print('Training Data Eval:')
+                summary, acc, loss_rgb = sess.run(
+                                [merged, accuracy, rgb_loss],
+                                feed_dict={rgb_images_placeholder: rgb_train_images,
+                                           labels_placeholder: train_labels,
+                                           class_weights_placeholder: weight_labels,
+                                           is_training: False
+                                          })
+                print("accuracy: " + "{:.5f}".format(acc))
+                print("rgb_loss: " + "{:.5f}".format(loss_rgb))
+                train_writer.add_summary(summary, step)
+
             print('Validation Data Eval:')
-
-
             #TODO: Fix to select random sample from entire test list
             sample_a = randint(0, 50, 1)
             sample = sample_a[0]
