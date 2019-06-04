@@ -107,25 +107,26 @@ def run_training():
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
 
         #Get the set of variables we wish to update, will pass into 'compute_gradients'
-        new = tf.trainable_variables()
-        print ("Vars: ")
-        print (new)
+        #For now just do the final inception network and final logits layer
 
         new_list = []
-        print ("Branch1")
         var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_1')
-
-        print(var_branch1)
         new_list.append(var_branch1)
 
         var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_2')
         new_list.append(var_branch2)
 
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_3')
+        new_list.append(var_branch3)
+
+        var_logits_final = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Logits')
+        new_list.append(var_logits_final)
+
         print("Full list")
         print(new_list)
 
         with tf.control_dependencies(update_ops):
-            rgb_grads = opt_rgb.compute_gradients(rgb_loss)
+            rgb_grads = opt_rgb.compute_gradients(rgb_loss, var_list=new_list)
             apply_gradient_rgb = opt_rgb.apply_gradients(rgb_grads, global_step=global_step)
             train_op = tf.group(apply_gradient_rgb)
             null_op = tf.no_op()
