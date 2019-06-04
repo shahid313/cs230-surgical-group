@@ -77,8 +77,7 @@ def run_processing():
                 #if true, exit the loops
 
                 if (((minute+2) >= last_min) and (hour == last_hour)):
-                    hour = last_hour
-                    minute = 60
+                    break
 
 
     list_file_rgb.close()
