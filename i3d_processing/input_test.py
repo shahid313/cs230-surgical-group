@@ -112,6 +112,7 @@ def import_label_rgb(filename, batch_size, current_sample):
     rgb_data = []
     flow_data = []
     label = []
+    exists = 1
     
     lines = list(lines)
     
