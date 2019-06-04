@@ -74,7 +74,7 @@ def run_processing():
                     label_f.readline()
 
                 #if true, exit the loops
-                if ((minute+2) >= last_min) and (hour == 1)):
+                if (((minute+2) >= last_min) and (hour == 1)):
                     hour = last_hour
                     minute = 60
 
