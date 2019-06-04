@@ -34,7 +34,7 @@ from numpy.random import randint
 
 # Basic model parameters as external flags.
 flags = tf.app.flags
-resume = 0 #whether to start from scratch or resume from pre-trained
+resume = 1 #whether to start from scratch or resume from pre-trained
 gpu_num = 1
 offset = 1 #train offset of steps already done
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
