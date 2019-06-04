@@ -303,7 +303,9 @@ def import_label_flow(filename, batch_size, current_sample):
 def assign_class_weights(labels):
     weights = []
 
+    print ("Assigning Class Weights")
     for label in range(labels):
+        print (label)
         weights.append(class_imbalance_weights[label])
 
     return weights
