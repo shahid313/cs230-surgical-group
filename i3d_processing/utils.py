@@ -100,6 +100,9 @@ def tower_loss_weighted( logit, labels, weights):
     #cross_entropy_mean = tf.reduce_mean(
     #         tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels, logits=logit)
     #          )
+    print("weight shape")
+    print(weights.shape)
+    print("ce shape")
     print(cross_entropy.shape)
 
     total_loss = cross_entropy_mean
