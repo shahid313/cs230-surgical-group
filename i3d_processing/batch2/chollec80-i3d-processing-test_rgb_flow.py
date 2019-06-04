@@ -9,14 +9,7 @@ def run_processing():
     video_ids = ["61", "62", "63", "64", "65", "66", "67", "68", "69", "70",
                  "71", "72", "73", "74", "75", "76", "77", "78", "79", "80"]
     root_dir = "chollec80_raw_data"
-    destination_dir = "chollec80_processed_data_full"
-
-    list_file_txt_rgb = "chollec80_processed_list_test_rgb_full.txt"
-    list_file_txt_flow = "chollec80_processed_list_test_flow_full.txt"
-    subprocess.call(["rm", "-rf", "chollec80_processed_list_test_rgb_full.txt"])
-    subprocess.call(["rm", "-rf", "chollec80_processed_list_test_flow_full.txt"])
-    list_file_rgb = open(list_file_txt_rgb,"w+")
-    list_file_flow = open(list_file_txt_flow,"w+")
+    destination_dir = "chollec80_processed_data_full_batch2"
 
     #loop through all  videos
 
@@ -25,12 +18,8 @@ def run_processing():
         subprocess.call(["rm", "-rf", "proc"])
         subprocess.call(["mkdir", "proc"])
 
-        label_txt = root_dir + "/video" + video_id + "-timestamp.txt"
-        label_f = open(label_txt, "r")
-        label_f.readline()
-
         #video preprocess (should be higher dimension, but cut like this for now)
-        subprocess.call(["ffmpeg", "-i", root_dir + "/video" + video_id + ".mp4", "-r", "25", "-s", "224x224", "-aspect", "4:3", "proc/video_process.mp4"])
+        subprocess.call(["ffmpeg", "-i", root_dir + "/video" + video_id + ".mp4", "-r", "5", "-s", "224x224", "-aspect", "4:3", "proc/video_process.mp4"])
 
         #get hour and minute bounds
         time_limit_list = list(open(label_txt, 'r'))
@@ -63,11 +52,11 @@ def run_processing():
                     subprocess.call(["ffmpeg", "-i", "proc/video_process.mp4", "-ss", ('%02d' % hour)+":"+('%02d' % minute)+":"+('%02d' % second), "-to", ('%02d' % next_hour)+":"+('%02d' % next_min)+":"+('%02d' % next_second), "tmp/video_process_cropped.mp4"])
 
 
-                    #sample the vids into 25 fps
+                    #sample the vids into 5 fps
                     subprocess.call(["ffmpeg", "-i", "tmp/video_process_cropped.mp4", "tmp/thumb%04d.jpg"])
 
-                    #loop through all images, 25 fps for 10s
-                    for i in range(1, 251):
+                    #loop through all images, 5 fps for 10s
+                    for i in range(1, 51):
 
                         image_str = "tmp/thumb" + ('%04d' % i) + ".jpg"
                         image = cv2.imread(image_str, cv2.IMREAD_COLOR)
@@ -126,40 +115,16 @@ def run_processing():
                         print ("Processed image " + str(i))
 
 
-                    rgb_video_r = rgb_video.reshape(1, 250, 224, 224, 3)
-                    flow_video_r = flow_video.reshape(1, 250, 224, 224, 2)
+                    rgb_video_r = rgb_video.reshape(1, 50, 224, 224, 3)
+                    flow_video_r = flow_video.reshape(1, 50, 224, 224, 2)
 
                     #when done, copy .npy files for one 10s video clip, RGB and Flow
-                    destination_rgb = destination_dir + "/video_rgb" + video_id + "_" + str(hour) + str(minute) + ".npy"
-                    destination_flow = destination_dir + "/video_flow" + video_id + "_" + str(hour) + str(minute) + ".npy"
+                    destination_rgb = destination_dir + "/video_rgb" + video_id + "_" + str(hour) + str(minute) + str(second) + ".npy"
+                    destination_flow = destination_dir + "/video_flow" + video_id + "_" + str(hour) + str(minute) + str(second) + ".npy"
                     np.save(destination_rgb, rgb_video_r)
                     np.save(destination_flow, flow_video_r)
 
                     print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute))
-
-                    line = label_f.readline()
-
-                    if line != '\n':
-                        raw_label = line.split('	')[1][:-1]
-                    else:
-                        raw_label = 6
-
-                    label = label_decoder(raw_label)
-                    label_title_rgb = "video_rgb" + video_id + "_" + str(hour) + str(minute) + str(second)
-                    label_title_flow = "video_flow" + video_id + "_" + str(hour) + str(minute) + str(second)
-                    list_file_rgb.write(label_title_rgb)
-                    list_file_rgb.write('	')
-                    list_file_rgb.write(str(label))
-                    list_file_rgb.write("\n")
-                    list_file_flow.write(label_title_flow)
-                    list_file_flow.write('	')
-                    list_file_flow.write(str(label))
-                    list_file_flow.write("\n")
-
-                    #skip until the next label
-                    #for this, 30s, ideally make this variable length
-                    for t in range(1, 750):
-                        label_f.readline()
 
                     if (((minute+1) >= last_min) and (hour == last_hour) and (second == 30)):
                         break
@@ -167,24 +132,6 @@ def run_processing():
 
     list_file_rgb.close()
     list_file_flow.close()
-
-
-def label_decoder(raw_label):
-
-    if(raw_label == "Preparation"):
-        return 0
-    elif(raw_label == "CalotTriangleDissection"):
-        return 1
-    elif(raw_label == "ClippingCutting"):
-        return 2
-    elif(raw_label == "GallbladderDissection"):
-        return 3
-    elif(raw_label == "GallbladderPackaging"):
-        return 4
-    elif(raw_label == "CleaningCoagulation"):
-        return 5
-    elif(raw_label == "GallbladderRetraction"):
-        return 6
 
 
 def main(_):
