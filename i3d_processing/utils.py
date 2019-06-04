@@ -105,6 +105,9 @@ def tower_loss_weighted( logit, labels, weights):
     print("ce shape")
     print(cross_entropy.shape)
 
+    cross_entropy_weighted = tf.math.multiply(weights, cross_entropy)
+    cross_entropy_mean = tf.reduce_mean(cross_entropy_weighted)
+
     total_loss = cross_entropy_mean
     return total_loss
 
