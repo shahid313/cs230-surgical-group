@@ -239,7 +239,7 @@ def import_label_rgb(filename, batch_size, current_sample):
 
         if os.path.isfile(rgb_txt):
             tmp_rgb = np.load(rgb_txt)
-        else
+        else:
             exists = 0
             break
 
