@@ -51,6 +51,7 @@ def run_processing():
 
                 line = label_f.readline()
 
+                print (video_id)
                 if line != '\n':
                     raw_label = line.split('	')[1][:-1]
                 else:
