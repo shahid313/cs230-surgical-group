@@ -99,6 +99,9 @@ def tower_loss_weighted( logit, labels, weights):
               )
     print(cross_entropy_mean)
 
+    total_loss = cross_entropy_mean
+    return total_loss
+
 def tower_acc(logit, labels):
     correct_pred = tf.equal(tf.argmax(logit, 1), labels)
     accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
