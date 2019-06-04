@@ -53,7 +53,7 @@ def run_processing():
         last_min = int(last_time[3] + last_time[4])
 
         for hour in range(0, (last_hour+1), 1):
-            for minute in range(0, (last_min), 2):
+            for minute in range(0, (60), 2):
 
                 subprocess.call(["rm", "-rf", "tmp"])
                 subprocess.call(["mkdir", "tmp"])
@@ -162,6 +162,9 @@ def run_processing():
                 #for this, two minutes, ideally make this variable length
                 for t in range(1, 3000):
                     label_f.readline()
+
+                if (((minute+2) >= last_min) and (hour == last_hour)):
+                    break
 
 
     list_file_rgb.close()

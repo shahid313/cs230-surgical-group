@@ -145,8 +145,8 @@ def run_processing():
                         raw_label = 6
 
                     label = label_decoder(raw_label)
-                    label_title_rgb = "video_rgb" + video_id + "_" + str(hour) + str(minute)
-                    label_title_flow = "video_flow" + video_id + "_" + str(hour) + str(minute)
+                    label_title_rgb = "video_rgb" + video_id + "_" + str(hour) + str(minute) + str(second)
+                    label_title_flow = "video_flow" + video_id + "_" + str(hour) + str(minute) + str(second)
                     list_file_rgb.write(label_title_rgb)
                     list_file_rgb.write('	')
                     list_file_rgb.write(str(label))
@@ -160,6 +160,9 @@ def run_processing():
                     #for this, 30s, ideally make this variable length
                     for t in range(1, 750):
                         label_f.readline()
+
+                    if (((minute+1) >= last_min) and (hour == last_hour) and (second == 30)):
+                        break
 
 
     list_file_rgb.close()
