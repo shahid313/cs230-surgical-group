@@ -304,7 +304,6 @@ def assign_class_weights(labels):
     weights = []
 
     for label in range(labels):
-        print (label)
         weights.append(class_imbalance_weights[label])
 
     return weights
