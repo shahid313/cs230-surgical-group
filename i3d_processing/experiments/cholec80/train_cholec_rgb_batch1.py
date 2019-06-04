@@ -68,8 +68,10 @@ def run_training():
     if not os.path.exists(model_save_dir):
         os.makedirs(model_save_dir)
     if (resume == 0):
+        print("Loading pretrained original")
         rgb_pre_model_save_dir = "../../checkpoints/rgb_imagenet"
     else:
+        print("Loading pretrained cholec80")
         rgb_pre_model_save_dir = "./models/rgb_imagenet_10000_6_64_0.0001_decay_model1_resume"
 
     with tf.Graph().as_default():
