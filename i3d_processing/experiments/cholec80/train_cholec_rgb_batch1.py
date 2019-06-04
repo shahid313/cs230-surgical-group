@@ -180,7 +180,7 @@ def run_training():
         sample = sample_a[0]
 
         #if we want linear training
-        sample = step
+        #sample = step
 
         print ("Training sample: %d" % (sample))
 
