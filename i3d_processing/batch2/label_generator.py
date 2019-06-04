@@ -13,12 +13,11 @@ def run_processing():
                  "41", "42", "43", "44", "45", "46", "47", "48", "49", "50",
                  "51", "52", "53", "54", "55", "56", "57", "58", "59", "60"]
     root_dir = "chollec80_raw_data"
-    destination_dir = "chollec80_processed_data_full"
 
-    list_file_txt_rgb = "chollec80_processed_list_rgb_full.txt"
-    list_file_txt_flow = "chollec80_processed_list_flow_full.txt"
-    subprocess.call(["rm", "-rf", "chollec80_processed_list_rgb_full.txt"])
-    subprocess.call(["rm", "-rf", "chollec80_processed_list_flow_full.txt"])
+    list_file_txt_rgb = "chollec80_processed_list_rgb_full_batch2.txt"
+    list_file_txt_flow = "chollec80_processed_list_flow_full_batch2.txt"
+    subprocess.call(["rm", "-rf", list_file_txt_rgb])
+    subprocess.call(["rm", "-rf", list_file_txt_flow])
     list_file_rgb = open(list_file_txt_rgb,"w+")
     list_file_flow = open(list_file_txt_flow,"w+")
 
