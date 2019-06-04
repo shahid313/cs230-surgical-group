@@ -60,17 +60,17 @@ def run_training():
     seed(1)
 
     if (resume == 0):
-        model_save_dir = './models/rgb_scratch_10000_6_64_0.0001_decay_model1_resume'
+        model_save_dir = './models/rgb_imagenet_10000_6_64_0.0001_decay_model1_resume'
     else:
-        model_save_dir = './models/rgb_scratch_10000_6_64_0.0001_decay_model1_resume_next'
+        model_save_dir = './models/rgb_imagenet_10000_6_64_0.0001_decay_model1_resume_next'
 
     # Create model directory
     if not os.path.exists(model_save_dir):
         os.makedirs(model_save_dir)
     if (resume == 0):
-        rgb_pre_model_save_dir = "../../checkpoints/rgb_scratch"
+        rgb_pre_model_save_dir = "../../checkpoints/rgb_imagenet"
     else:
-        rgb_pre_model_save_dir = "./models/rgb_scratch_10000_6_64_0.0001_decay_model1_resume"
+        rgb_pre_model_save_dir = "./models/rgb_imagenet_10000_6_64_0.0001_decay_model1_resume"
 
     with tf.Graph().as_default():
         global_step = tf.get_variable(
@@ -110,6 +110,14 @@ def run_training():
         new = tf.trainable_variables()
         print ("Vars: ")
         print (new)
+
+        new_list = []
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_1')
+
+        print(var_branch1)
+        new_list.append(var_branch1)
+
+        print(new_list)
 
         with tf.control_dependencies(update_ops):
             rgb_grads = opt_rgb.compute_gradients(rgb_loss)
