@@ -154,6 +154,6 @@ def import_label_rgb(filename, batch_size, current_sample):
     else:
         np_arr_rgb_data = []
         np_arr_flow_data = []
-        np_arr_label = []
+        np_arr_label = np.zeros((1))
 
     return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size), exists
