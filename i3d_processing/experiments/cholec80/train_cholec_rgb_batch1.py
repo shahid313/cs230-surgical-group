@@ -105,6 +105,12 @@ def run_training():
                                 )
         accuracy = tower_acc(rgb_logit, labels_placeholder)
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+
+        #Get the set of variables we wish to update, will pass into 'compute_gradients'
+        new = tf.trainable_variables()
+        print ("Vars: ")
+        print (new)
+
         with tf.control_dependencies(update_ops):
             rgb_grads = opt_rgb.compute_gradients(rgb_loss)
             apply_gradient_rgb = opt_rgb.apply_gradients(rgb_grads, global_step=global_step)
