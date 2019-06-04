@@ -49,9 +49,6 @@ def run_processing():
         for hour in range(0, (last_hour+1), 1):
             for minute in range(0, (60), 2):
 
-                if ((minute >= last_min) and (hour == 1)):
-                    break
-
                 line = label_f.readline()
 
                 if line != '\n':
@@ -75,6 +72,11 @@ def run_processing():
                 #for this, two minutes, ideally make this variable length
                 for t in range(1, 3000):
                     label_f.readline()
+
+                #if true, exit the loops
+                if ((minute+2) >= last_min) and (hour == 1)):
+                    hour = last_hour
+                    minute = 60
 
 
     list_file_rgb.close()
