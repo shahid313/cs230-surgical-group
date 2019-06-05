@@ -21,6 +21,8 @@ def run_processing():
         #video preprocess (should be higher dimension, but cut like this for now)
         subprocess.call(["ffmpeg", "-i", root_dir + "/video" + video_id + ".mp4", "-r", "5", "-s", "224x224", "-aspect", "4:3", "proc/video_process.mp4"])
 
+        label_txt = root_dir + "/video" + video_id + "-timestamp.txt"
+
         #get hour and minute bounds
         time_limit_list = list(open(label_txt, 'r'))
         time_limit_len = len(time_limit_list)
