@@ -89,34 +89,36 @@ def run_training():
         s_index = 0
         predicts = []
         top1 = False
-        val_images, _, val_labels = input_test.import_label_rgb(
+        val_images, _, val_labels, exists = input_test.import_label_rgb(
                         filename=test_list_file,
                         batch_size=FLAGS.batch_size * gpu_num,
                         current_sample=step
                         )
-        predict = sess.run(norm_score,
-                           feed_dict={
-                                        rgb_images_placeholder: val_images,
-                                        labels_placeholder: val_labels,
-                                        is_training: False
-                                        })
-        predicts.append(np.array(predict).astype(np.float32).reshape(FLAGS.classics))
-        avg_pre = np.mean(predicts, axis=0).tolist()
-        top1_test = avg_pre.index(max(avg_pre))
-        top1 = (top1_test==val_labels)
-        top1_list.append(top1)
-        duration = time.time() - start_time
 
-        print (predict)
-        print (top1_test)
-        print (top1)
-        print (val_labels)
-        print("Test step %d done" % (step))
+        if (exists == 1):
+            predict = sess.run(norm_score,
+                               feed_dict={
+                                            rgb_images_placeholder: val_images,
+                                            labels_placeholder: val_labels,
+                                            is_training: False
+                                            })
+            predicts.append(np.array(predict).astype(np.float32).reshape(FLAGS.classics))
+            avg_pre = np.mean(predicts, axis=0).tolist()
+            top1_test = avg_pre.index(max(avg_pre))
+            top1 = (top1_test==val_labels)
+            top1_list.append(top1)
+            duration = time.time() - start_time
 
-        print('TOP_1_ACC in test: %f , time use: %.3f' % (top1, duration))
-        print(len(top1_list))
-        print('TOP_1_ACC in test: %f' % np.mean(top1_list))
-        print("done")
+            print (predict)
+            print (top1_test)
+            print (top1)
+            print (val_labels)
+            print("Test step %d done" % (step))
+
+            print('TOP_1_ACC in test: %f , time use: %.3f' % (top1, duration))
+            print(len(top1_list))
+            print('TOP_1_ACC in test: %f' % np.mean(top1_list))
+            print("done")
 
 
 def main(_):
