@@ -45,6 +45,8 @@ def run_processing():
         last_hour = int(last_time[0] + last_time[1])
         last_min = int(last_time[3] + last_time[4])
 
+        video_done = False
+
         for hour in range(0, (last_hour+1), 1):
             for minute in range(0, (60), 1):
                 for second in range(0, (60), 30):
