@@ -113,7 +113,7 @@ def run_processing():
                     destination_flow = destination_dir + "/video_flow" + video_id + "_" + str(hour) + "_" + str(minute) + "_" + str(second) + ".npy"
                     np.save(destination_flow, flow_video_r)
 
-                    print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute) + " " str(second))
+                    print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute) + " " + str(second))
 
                     if (((minute+1) >= last_min) and (hour == last_hour) and (second == 30)):
                         video_done = True

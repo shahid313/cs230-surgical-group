@@ -130,7 +130,7 @@ def run_processing():
                     np.save(destination_rgb, rgb_video_r)
                     np.save(destination_flow, flow_video_r)
 
-                    print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute) + " " str(second))
+                    print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute) + " " + str(second))
 
                     if (((minute+1) >= last_min) and (hour == last_hour) and (second == 30)):
                         video_done = True
