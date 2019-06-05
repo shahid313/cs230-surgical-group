@@ -128,8 +128,13 @@ def run_processing():
 
                     print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute))
 
-                    if (((minute+2) >= last_min) and (hour == last_hour) and (second == 30)):
+                    if (((minute+1) >= last_min) and (hour == last_hour) and (second == 30)):
+                        video_done = True
                         break
+                if (video_done == True):
+                    break
+            if (video_done == True):
+                break
 
 
 def main(_):

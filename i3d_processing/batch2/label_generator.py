@@ -75,8 +75,13 @@ def run_processing():
 
                     #if true, exit the loops
 
-                    if (((minute+2) >= last_min) and (hour == last_hour) and (second == 30)):
+                    if (((minute+1) >= last_min) and (hour == last_hour) and (second == 30)):
+                        video_done = True
                         break
+                if (video_done == True):
+                    break
+            if (video_done == True):
+                break
 
 
     list_file_rgb.close()
