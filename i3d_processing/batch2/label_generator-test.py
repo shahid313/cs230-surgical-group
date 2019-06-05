@@ -42,7 +42,7 @@ def run_processing():
         last_min = int(last_time[3] + last_time[4])
 
         for hour in range(0, (last_hour+1), 1):
-            for minute in range(0, (60), 2):
+            for minute in range(0, (60), 1):
                 for second in range(0, 60, 30):
 
                 line = label_f.readline()
@@ -69,7 +69,7 @@ def run_processing():
                 for t in range(1, 750):
                     label_f.readline()
 
-                if (((minute+1) >= last_min) and (hour == last_hour) and (second == 30)):
+                if (((minute+2) >= last_min) and (hour == last_hour) and (second == 30)):
                     break
 
 

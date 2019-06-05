@@ -132,7 +132,7 @@ def run_processing():
 
                     print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute) + " " str(second))
 
-                    if (((minute+1) >= last_min) and (hour == last_hour)):
+                    if (((minute+2) >= last_min) and (hour == last_hour)):
                         break
 
 

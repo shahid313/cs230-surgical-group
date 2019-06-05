@@ -40,7 +40,7 @@ def run_processing():
         last_min = int(last_time[3] + last_time[4])
 
         for hour in range(0, (last_hour+1), 1):
-            for minute in range(0, (last_min), 1):
+            for minute in range(0, (60), 1):
                 for second in range(0, 60, 30):
 
                     subprocess.call(["rm", "-rf", "tmp"])
@@ -88,7 +88,7 @@ def run_processing():
 
                     print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute))
 
-                    if (((minute+1) >= last_min) and (hour == last_hour) and (second == 30)):
+                    if (((minute+2) >= last_min) and (hour == last_hour) and (second == 30)):
                         break
 
 
