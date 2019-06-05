@@ -49,8 +49,8 @@ def run_processing():
         video_done = False
 
         for hour in range(0, (last_hour+1), 1):
-            for minute in range(0, (60), 1):
-                for second in range(0, (60), 30):
+            for minute in range(0, (60), 2):
+                for second in range(0, (60), 60):
 
                     subprocess.call(["rm", "-rf", "tmp"])
                     subprocess.call(["mkdir", "tmp"])
@@ -120,7 +120,7 @@ def run_processing():
 
                     print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute) + " " + str(second))
 
-                    if (((minute+1) >= last_min) and (hour == last_hour) and (second == 30)):
+                    if (((minute+2) >= last_min) and (hour == last_hour) and (second == 30)):
                         video_done = True
                         break
                 if (video_done == True):
