@@ -46,6 +46,8 @@ def run_processing():
         print (last_hour)
         print (last_min)
 
+        video_done = False
+
         for hour in range(0, (last_hour+1), 1):
             for minute in range(0, (60), 1):
                 for second in range(0, (60), 30):
@@ -95,9 +97,13 @@ def run_processing():
 
                     print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute) + " " + str(second))
 
-                    if (((minute+2) >= last_min) and (hour == last_hour)):
-                        print ("This video is done")
+                    if (((minute+1) >= last_min) and (hour == last_hour)):
+                        video_done = True
                         break
+                if (video_done == True):
+                    break
+            if (video_done == True):
+                break
 
 
 def main(_):
