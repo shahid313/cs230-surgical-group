@@ -57,8 +57,8 @@ def run_processing():
                         raw_label = 6
 
                     label = label_decoder(raw_label)
-                    label_title_rgb = "video_rgb" + video_id + "_" + str(hour) + str(minute) + str(second)
-                    label_title_flow = "video_flow" + video_id + "_" + str(hour) + str(minute) + str(second)
+                    label_title_rgb = "video_rgb" + video_id + "_" + str(hour) + "_" + str(minute) + "_" + str(second)
+                    label_title_flow = "video_flow" + video_id + "_" + str(hour) + "_" + str(minute) + "_" + str(second)
                     list_file_rgb.write(label_title_rgb)
                     list_file_rgb.write('	')
                     list_file_rgb.write(str(label))
