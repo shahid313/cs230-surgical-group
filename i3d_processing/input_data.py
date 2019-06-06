@@ -319,8 +319,10 @@ def import_label_rgb_batch2(filename, batch_size, current_sample):
     exists = 1
     
     lines = list(lines)
+
+    sample_start = (current_sample % lines)
     
-    for i in range(current_sample, (current_sample+batch_size)):
+    for i in range(sample_start, (sample_start+batch_size)):
         line = lines[i-1].strip('\n').split()
         dirname = line[0]
         tmp_label = line[1]
@@ -372,8 +374,10 @@ def import_label_flow_batch2(filename, batch_size, current_sample):
     exists = 1
     
     lines = list(lines)
+
+    sample_start = (current_sample % lines)
     
-    for i in range(current_sample, (current_sample+batch_size)):
+    for i in range(sample_start, (sample_start+batch_size)):
         line = lines[i-1].strip('\n').split()
         dirname = line[0]
         tmp_label = line[1]
