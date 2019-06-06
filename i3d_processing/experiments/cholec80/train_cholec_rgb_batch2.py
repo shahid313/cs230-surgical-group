@@ -36,7 +36,7 @@ from numpy.random import randint
 flags = tf.app.flags
 resume = 1 #whether to start from scratch or resume from pre-trained
 gpu_num = 1
-offset = 2000 #train offset of steps already done
+offset = 0 #train offset of steps already done
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
 flags.DEFINE_integer('max_steps', 100000, 'Number of steps to run trainer.')
 flags.DEFINE_integer('batch_size', 1, 'Batch size.')
