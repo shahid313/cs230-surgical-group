@@ -331,6 +331,10 @@ def import_label_rgb_batch2(filename, batch_size, current_sample):
         #load the .npy file for rgb
         rgb_txt = "../../chollec80/chollec80_processed_data_full_batch2/" + dirname + ".npy"
 
+        print(rgb_txt)
+
+        tmp_rgb = np.load(rgb_txt)
+
         if os.path.isfile(rgb_txt):
             print("Training video found")
             tmp_rgb = np.load(rgb_txt)
