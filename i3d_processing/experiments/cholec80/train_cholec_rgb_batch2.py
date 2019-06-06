@@ -47,7 +47,8 @@ flags.DEFINE_integer('flow_channels', 2, 'FLOW_channels for input')
 flags.DEFINE_integer('classics', 7, 'The num of class')
 FLAGS = flags.FLAGS
 train_file = '../../list/chollec80_processed_list_rgb_full_batch2.txt'
-test_file = '../../list/chollec80_processed_list_test_rgb_full_batch2.txt'
+#test_file = '../../list/chollec80_processed_list_test_rgb_full_batch2.txt'
+test_file = '../../list/chollec80_processed_list_test_rgb.txt'
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
