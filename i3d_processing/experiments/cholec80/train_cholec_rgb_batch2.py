@@ -194,6 +194,8 @@ def run_training():
     file = list(open(train_file, 'r'))
     num_test_videos = len(file)
 
+    class_imbalance_weights = input_data.compute_class_weights(train_file, FLAGS.classics, num_test_videos)
+
     for step in xrange(FLAGS.max_steps):
         step = offset + step
         start_time = time.time()
@@ -217,7 +219,7 @@ def run_training():
         #actually train the model
         if (exists == 1):
             #assign weights to fight class imbalance
-            weight_labels = input_data.assign_class_weights(train_labels)
+            weight_labels = input_data.assign_class_weights_computed(train_label, class_imbalance_weights)
 
             sess.run(train_op, feed_dict={
                           rgb_images_placeholder: rgb_train_images,

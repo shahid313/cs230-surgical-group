@@ -431,6 +431,36 @@ def assign_class_weights(labels):
     for label in labels:
         print ("Label:")
         print (label)
-        weights.append(class_imbalance_weights[label])
+        weights.append(class_imbalance_weights[int(label)])
 
     return weights
+
+def assign_class_weights(labels, computed_weights):
+    weights = []
+
+    for label in labels:
+        print ("Label:")
+        print (label)
+        weights.append(computed_weights[int(label)])
+
+    return weights
+
+def compute_class_weights(train_file, num_classes, num_samples):
+    weights = np.zeros((num_classes))
+
+    lines = open(filename, 'r')
+
+    for i in range(0, num_samples):
+        line = lines.readline()
+        line_split = line.strip('\n').split()
+
+        tmp_label = int(line_split[1])
+        weights[tmp_label] = weights[tmp_label] + 1
+
+
+    for i in range(0, num_classes):
+        inv_weights[i] = 1 / weights[i]
+
+    return inv_weights
+
+
