@@ -340,7 +340,7 @@ def import_label_rgb_batch2(filename, batch_size, current_sample):
             exists = 0
             break
 
-        if (i == current_sample):
+        if (i == sample_start):
             rgb_data = tmp_rgb
         else:
             rgb_data = np.concatenate((rgb_data, tmp_rgb), axis=0)
@@ -397,7 +397,7 @@ def import_label_flow_batch2(filename, batch_size, current_sample):
             exists = 0
             break
 
-        if (i == current_sample):
+        if (i == sample_start):
             rgb_data = tmp_rgb
         else:
             rgb_data = np.concatenate((rgb_data, tmp_rgb), axis=0)
