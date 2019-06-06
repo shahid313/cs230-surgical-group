@@ -112,6 +112,15 @@ def run_training():
         #For now just do the final inception network and final logits layer, the other layers are frozen
 
         new_list = []
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_1')
+        new_list.append(var_branch1)
+
+        var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_2')
+        new_list.append(var_branch2)
+
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_3')
+        new_list.append(var_branch3)
+
         var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_1')
         new_list.append(var_branch1)
 

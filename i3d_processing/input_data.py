@@ -27,7 +27,7 @@ import numpy as np
 import cv2
 import time
 
-class_imbalance_weights = [1, .6, .85, .95, 1, 1, 1]
+class_imbalance_weights = [1, .6, .8, .65, 1, 1, 1]
 
 def sample_data(ori_arr, num_frames_per_clip, sample_rate):
     ret_arr = []
