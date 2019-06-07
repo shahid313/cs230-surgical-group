@@ -435,7 +435,7 @@ def assign_class_weights(labels):
 
     return weights
 
-def assign_class_weights(labels, computed_weights):
+def assign_class_weights_computed(labels, computed_weights):
     weights = []
 
     for label in labels:
