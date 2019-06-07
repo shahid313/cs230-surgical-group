@@ -115,7 +115,7 @@ def tower_loss_weight_subtract( logit, labels, weights):
     total_loss = cross_entropy_mean
 
     if(total_loss < 0):
-        total_loss = 0
+        total_loss = .001
     return total_loss
 
 def tower_acc(logit, labels):
