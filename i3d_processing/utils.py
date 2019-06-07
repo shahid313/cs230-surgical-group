@@ -108,7 +108,7 @@ def tower_loss_weight_subtract( logit, labels, weights):
 
     cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels, logits=logit)
 
-    cross_entropy_boosted = tf.math.add(cross_entropy, .5)
+    cross_entropy_boosted = tf.math.add(cross_entropy, .1)
     cross_entropy_subtracted = tf.math.subtract(cross_entropy_boosted, weights)
     cross_entropy_mean = tf.reduce_mean(cross_entropy_subtracted)
 
