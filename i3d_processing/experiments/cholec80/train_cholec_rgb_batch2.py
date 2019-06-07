@@ -34,7 +34,7 @@ from numpy.random import randint
 
 # Basic model parameters as external flags.
 flags = tf.app.flags
-resume = 0 #whether to start from scratch or resume from pre-trained
+resume = 1 #whether to start from scratch or resume from pre-trained
 gpu_num = 1
 offset = 0 #train offset of steps already done
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
@@ -194,7 +194,7 @@ def run_training():
     file = list(open(train_file, 'r'))
     num_test_videos = len(file)
 
-    current_epoch = 0
+    current_epoch = 2
     print("Current Epoch: %d" % current_epoch)
 
     class_imbalance_weights = input_data.compute_class_weights(train_file, FLAGS.classics, num_test_videos)
@@ -212,11 +212,15 @@ def run_training():
 
         print ("Training sample: %d" % (sample))
 
+        #epoch_forgets
+        epoch_forgets = [1, 3]
+
         #get the processed data
-        rgb_train_images, flow_train_images, train_labels, exists = input_data.import_label_rgb_batch2(
+        rgb_train_images, flow_train_images, train_labels, exists = input_data.import_label_rgb_batch2_forget(
                       filename=train_file,
                       batch_size=FLAGS.batch_size * gpu_num,
-                      current_sample=sample
+                      current_sample=sample,
+                      forgets=epoch_forgets
                       )
 
         #actually train the model
@@ -255,10 +259,11 @@ def run_training():
             #TODO: Fix to select random sample from entire test list
             sample_a = randint(0, 50, 1)
             sample = sample_a[0]
-            rgb_val_images, flow_val_images, val_labels, exists = input_test.import_label_rgb_batch2(
+            rgb_val_images, flow_val_images, val_labels, exists = input_test.import_label_rgb_batch2_forget(
                             filename=test_file,
                             batch_size=FLAGS.batch_size * gpu_num,
-                            current_sample=sample
+                            current_sample=sample,
+                            forgets=epoch_forgets
                             )
 
             if (exists == 1):
