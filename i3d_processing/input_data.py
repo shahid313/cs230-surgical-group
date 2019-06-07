@@ -448,7 +448,7 @@ def assign_class_weights(labels, computed_weights):
 def compute_class_weights(train_file, num_classes, num_samples):
     weights = np.zeros((num_classes))
 
-    lines = open(filename, 'r')
+    lines = open(train_file, 'r')
 
     for i in range(0, num_samples):
         line = lines.readline()
