@@ -462,6 +462,8 @@ def compute_class_weights(train_file, num_classes, num_samples):
     for i in range(0, num_classes):
         #inv_weights[i] = (1 / weights[i])
         inv_weights[i] = (weights[i] / num_samples)
+        print(i)
+        print(inv_weights[i])
 
     return inv_weights
 
