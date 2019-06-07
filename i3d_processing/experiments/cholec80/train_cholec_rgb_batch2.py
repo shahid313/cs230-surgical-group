@@ -259,11 +259,10 @@ def run_training():
             #TODO: Fix to select random sample from entire test list
             sample_a = randint(0, 50, 1)
             sample = sample_a[0]
-            rgb_val_images, flow_val_images, val_labels, exists = input_test.import_label_rgb_batch2_forget(
+            rgb_val_images, flow_val_images, val_labels, exists = input_test.import_label_rgb_batch2(
                             filename=test_file,
                             batch_size=FLAGS.batch_size * gpu_num,
-                            current_sample=sample,
-                            forgets=epoch_forgets
+                            current_sample=sample
                             )
 
             if (exists == 1):
