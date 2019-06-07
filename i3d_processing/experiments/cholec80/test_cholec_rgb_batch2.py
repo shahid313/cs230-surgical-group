@@ -44,7 +44,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 def run_training():
     # Get the sets of images and labels for training, validation, and
     # Tell TensorFlow that the model will be built into the default Graph.
-    pre_model_save_dir = "./models/rgb_imagenet_batch2_resume_next"
+    pre_model_save_dir = "./models/rgb_imagenet_batch2_sgd_gradsub_allclasses"
     test_list_file = '../../list/chollec80_processed_list_test_rgb_full_batch2.txt'
     file = list(open(test_list_file, 'r'))
     num_test_videos = len(file)
