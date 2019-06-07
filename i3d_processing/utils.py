@@ -114,9 +114,9 @@ def tower_loss_weight_subtract( logit, labels, weights):
 
     total_loss = cross_entropy_mean
 
-    if(total_loss < 0):
-        total_loss = .001
-    return total_loss
+    total_loss_clip = tf.cond( total_loss < 0, lambda: tf.add(tf.add(total_loss, -total_loss), .001), lambda: cross_entropy_mean)
+
+    return total_loss_clip
 
 def tower_acc(logit, labels):
     correct_pred = tf.equal(tf.argmax(logit, 1), labels)
