@@ -199,7 +199,7 @@ def run_training():
 
     class_imbalance_weights = input_data.compute_class_weights(train_file, FLAGS.classics, num_test_videos)
 
-    for step in xrange(FLAGS.max_steps):
+    for step in range(0, FLAGS.max_steps, FLAGS.batch_size):
         step = offset + step
         start_time = time.time()
 
