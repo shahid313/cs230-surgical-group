@@ -100,7 +100,7 @@ def tower_loss_weighted( logit, labels, weights):
     total_loss = cross_entropy_mean
     return total_loss
 
-def tower_loss_weight_subtract( logit, lables, weights):
+def tower_loss_weight_subtract( logit, labels, weights):
     print(labels)
     print(logit)
     print(logit.shape)
