@@ -220,7 +220,7 @@ def run_training():
         #actually train the model
         if (exists == 1):
             #assign weights to fight class imbalance
-            weight_labels = input_data.assign_class_weights_computed(train_label, class_imbalance_weights)
+            weight_labels = input_data.assign_class_weights_computed(train_labels, class_imbalance_weights)
 
             sess.run(train_op, feed_dict={
                           rgb_images_placeholder: rgb_train_images,
@@ -276,7 +276,7 @@ def run_training():
         if ((step / num_test_videos) != current_epoch):
             current_epoch = current_epoch + 1
             print("Current Epoch: %d" % current_epoch)
-            
+
     print("done")
 
 
