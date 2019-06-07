@@ -194,6 +194,9 @@ def run_training():
     file = list(open(train_file, 'r'))
     num_test_videos = len(file)
 
+    current_epoch = 0
+    print("Current Epoch: %d" % current_epoch)
+
     class_imbalance_weights = input_data.compute_class_weights(train_file, FLAGS.classics, num_test_videos)
 
     for step in xrange(FLAGS.max_steps):
@@ -271,6 +274,11 @@ def run_training():
                 test_writer.add_summary(summary, step)
         if step == 0 or (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             saver.save(sess, os.path.join(model_save_dir, 'i3d_cholec_model'), global_step=step)
+
+        if ((step / num_test_videos) != current_epoch):
+            current_epoch = current_epoch + 1
+            print("Current Epoch: %d" % current_epoch)
+
     print("done")
 
 
