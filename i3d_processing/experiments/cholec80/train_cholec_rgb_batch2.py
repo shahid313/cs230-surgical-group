@@ -31,15 +31,16 @@ from utils import *
 from tensorflow.python import pywrap_tensorflow
 from numpy.random import seed
 from numpy.random import randint
+from random import shuffle
 
 # Basic model parameters as external flags.
 flags = tf.app.flags
 resume = 0 #whether to start from scratch or resume from pre-trained
 gpu_num = 1
-offset = 1 #train offset of steps already done
+offset = 0 #train offset of steps already done
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
 flags.DEFINE_integer('max_steps', 100000, 'Number of steps to run trainer.')
-flags.DEFINE_integer('batch_size', 1, 'Batch size.')
+flags.DEFINE_integer('batch_size', 16, 'Batch size.')
 flags.DEFINE_integer('num_frame_per_clib', 50, 'Nummber of frames per clib')
 flags.DEFINE_integer('crop_size', 224, 'Crop_size')
 flags.DEFINE_integer('rgb_channels', 3, 'RGB_channels for input')
@@ -100,7 +101,7 @@ def run_training():
                                     spatial_squeeze=True,
                                     final_endpoint='Logits'
                                     )(rgb_images_placeholder, is_training)
-        rgb_loss = tower_loss_weighted(
+        rgb_loss = tower_loss_weight_subtract(
                                 rgb_logit,
                                 labels_placeholder,
                                 class_weights_placeholder
@@ -112,6 +113,28 @@ def run_training():
         #For now just do the final inception network and final logits layer, the other layers are frozen
 
         new_list = []
+
+        #train 5a
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5a/Branch_1')
+        new_list.append(var_branch1)
+
+        var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5a/Branch_2')
+        new_list.append(var_branch2)
+
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5a/Branch_3')
+        new_list.append(var_branch3)
+
+        #train 5b
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_1')
+        new_list.append(var_branch1)
+
+        var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_2')
+        new_list.append(var_branch2)
+
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_3')
+        new_list.append(var_branch3)
+
+        #train 5c
         var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_1')
         new_list.append(var_branch1)
 
@@ -121,6 +144,7 @@ def run_training():
         var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_3')
         new_list.append(var_branch3)
 
+        #train logits
         var_logits_final = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Logits')
         new_list.append(var_logits_final)
 
@@ -171,7 +195,22 @@ def run_training():
     file = list(open(train_file, 'r'))
     num_test_videos = len(file)
 
-    for step in xrange(FLAGS.max_steps):
+    #make batches
+    num_batches = int(num_test_videos/FLAGS.batch_size)
+    batch_list = []
+
+    #make an ordered list
+    for l in range(0, (num_batches * FLAGS.batch_size), 1):
+        batch_list.append(l)
+
+    shuffle(batch_list)
+
+    current_epoch = 0
+    print("Current Epoch: %d" % current_epoch)
+
+    class_imbalance_weights = input_data.compute_class_weights(train_file, FLAGS.classics, num_test_videos)
+
+    for step in range(0, FLAGS.max_steps, FLAGS.batch_size):
         step = offset + step
         start_time = time.time()
 
@@ -180,7 +219,7 @@ def run_training():
         sample = sample_a[0]
 
         #if we want linear training
-        #sample = step
+        sample = step
 
         print ("Training sample: %d" % (sample))
 
@@ -188,13 +227,14 @@ def run_training():
         rgb_train_images, flow_train_images, train_labels, exists = input_data.import_label_rgb_batch2(
                       filename=train_file,
                       batch_size=FLAGS.batch_size * gpu_num,
-                      current_sample=sample
+                      current_sample=sample,
+                      batch_list=batch_list
                       )
 
         #actually train the model
         if (exists == 1):
             #assign weights to fight class imbalance
-            weight_labels = input_data.assign_class_weights(train_labels)
+            weight_labels = input_data.assign_class_weights_computed(train_labels, class_imbalance_weights)
 
             sess.run(train_op, feed_dict={
                           rgb_images_placeholder: rgb_train_images,
@@ -246,6 +286,11 @@ def run_training():
                 test_writer.add_summary(summary, step)
         if step == 0 or (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             saver.save(sess, os.path.join(model_save_dir, 'i3d_cholec_model'), global_step=step)
+
+        if (int(step / num_test_videos) != current_epoch):
+            current_epoch = current_epoch + 1
+            print("Current Epoch: %d" % current_epoch)
+
     print("done")
 
 
