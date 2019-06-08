@@ -84,6 +84,7 @@ def run_training():
 
     all_steps = num_test_videos
     top1_list = []
+    confusion_matrix = np.zeros((FLAGS.classics, FLAGS.classics))
     for step in xrange(all_steps):
         start_time = time.time()
         s_index = 0
@@ -106,6 +107,7 @@ def run_training():
             avg_pre = np.mean(predicts, axis=0).tolist()
             top1_test = avg_pre.index(max(avg_pre))
             top1 = (top1_test==val_labels)
+            confusion_matrix[top1_test][val_labels[0]] = confusion_matrix[top1_test][val_labels[0]] + 1
             top1_list.append(top1)
             duration = time.time() - start_time
 
@@ -120,6 +122,11 @@ def run_training():
             print('TOP_1_ACC in test: %f' % np.mean(top1_list))
             print("done")
 
+    print ("Done Testing")
+    print ("Accuracy:")
+    print (np.mean(top1_list))
+    print ("Confusion Matrix")
+    print (confusion_matrix)
 
 def main(_):
     run_training()
