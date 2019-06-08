@@ -395,9 +395,14 @@ def import_label_flow_batch2(filename, batch_size, current_sample):
             print("Training video found")
             tmp_rgb = np.load(rgb_txt)
         else:
-            print("Training video doesn't exist!")
-            exists = 0
-            break
+            rgb_txt = "../../chollec80/cholec80_processed_batch2/chollec80_processed_data_full_batch2_imb/" + dirname + ".npy"
+
+            if os.path.isfile(rgb_txt):
+                print("Training video found")
+            else:
+                print("Training video doesn't exist!")
+                exists = 0
+                break
 
         if (i == sample_start):
             rgb_data = tmp_rgb
