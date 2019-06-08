@@ -200,7 +200,7 @@ def run_training():
 
     #make an ordered list
     for l in range(0, (num_batches * FLAGS.batch_size), 1):
-        batch_list[l] = l
+        batch_list.append(l)
 
     batch_list.shuffle()
 
