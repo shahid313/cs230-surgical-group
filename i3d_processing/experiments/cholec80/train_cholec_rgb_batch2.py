@@ -275,7 +275,7 @@ def run_training():
         if step == 0 or (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             saver.save(sess, os.path.join(model_save_dir, 'i3d_cholec_model'), global_step=step)
 
-        if ((step / num_test_videos) != current_epoch):
+        if (int(step / num_test_videos) != current_epoch):
             current_epoch = current_epoch + 1
             print("Current Epoch: %d" % current_epoch)
 
