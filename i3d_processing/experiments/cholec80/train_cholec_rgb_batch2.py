@@ -31,6 +31,7 @@ from utils import *
 from tensorflow.python import pywrap_tensorflow
 from numpy.random import seed
 from numpy.random import randint
+from random import shuffle
 
 # Basic model parameters as external flags.
 flags = tf.app.flags
@@ -202,7 +203,7 @@ def run_training():
     for l in range(0, (num_batches * FLAGS.batch_size), 1):
         batch_list.append(l)
 
-    batch_list.shuffle()
+    shuffle(batch_list)
 
     current_epoch = 0
     print("Current Epoch: %d" % current_epoch)
