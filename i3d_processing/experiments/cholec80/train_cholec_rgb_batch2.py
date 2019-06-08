@@ -194,8 +194,10 @@ def run_training():
     file = list(open(train_file, 'r'))
     num_test_videos = len(file)
 
-    current_epoch = 2
+    current_epoch = 0
     print("Current Epoch: %d" % current_epoch)
+
+    epoch_forgets = []
 
     class_imbalance_weights = input_data.compute_class_weights(train_file, FLAGS.classics, num_test_videos)
 
@@ -211,9 +213,6 @@ def run_training():
         sample = step
 
         print ("Training sample: %d" % (sample))
-
-        #epoch_forgets
-        epoch_forgets = [1, 3]
 
         #get the processed data
         rgb_train_images, flow_train_images, train_labels, exists = input_data.import_label_rgb_batch2_forget(
@@ -279,9 +278,21 @@ def run_training():
         if step == 0 or (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             saver.save(sess, os.path.join(model_save_dir, 'i3d_cholec_model'), global_step=step)
 
-        if ((step / num_test_videos) != current_epoch):
+        if (int(step / num_test_videos) != current_epoch):
             current_epoch = current_epoch + 1
             print("Current Epoch: %d" % current_epoch)
+
+            forget_val = (current_epoch % 5)
+
+            if(forget_val == 0 or forget_val == 1):
+                epoch_forgets = []
+            elif(forget_val == 2):
+                epoch_forgets = [1, 3]
+            elif(forget_val == 3):
+                epoch_forgets = [1, 3]
+            elif(forget_val == 4):
+                epoch_forgets = [0, 1, 2, 3, 5]
+
 
     print("done")
 
