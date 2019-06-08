@@ -89,6 +89,9 @@ def run_processing():
 
         video_done = False
 
+        label_f = open(label_txt, "r")
+        label_f.readline()
+
         for hour in range(0, (last_hour+1), 1):
             for minute in range(0, (60), 1):
                 for second in range(0, (60), 10):
