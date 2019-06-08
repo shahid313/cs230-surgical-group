@@ -294,7 +294,7 @@ def run_training():
                 epoch_forgets = [0, 1, 2, 3, 5]
 
         #have script run for 5 epoch
-        if (epoch == 5):
+        if (current_epoch == 5):
             break
 
 
