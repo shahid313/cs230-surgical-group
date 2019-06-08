@@ -27,7 +27,7 @@ import numpy as np
 import cv2
 import time
 
-class_imbalance_weights = [1, .6, .85, .95, 1, 1, 1]
+class_imbalance_weights = [1, .6, .8, .65, 1, 1, 1]
 
 def sample_data(ori_arr, num_frames_per_clip, sample_rate):
     ret_arr = []
@@ -304,14 +304,14 @@ def import_label_flow(filename, batch_size, current_sample):
             rgb_data.append(rgb_data[-1])
             flow_data.append(flow_data[-1])
             label.append(int(label[-1]))
-
+        
         np_arr_rgb_data = np.array(rgb_data).astype(np.float32)
         np_arr_flow_data = np.array(flow_data).astype(np.float32)
         np_arr_label = np.array(label).astype(np.int64)
-
+        
         return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)
 
-def import_label_rgb_batch2(filename, batch_size, current_sample):
+def import_label_rgb_batch2(filename, batch_size, current_sample, batch_list):
     lines = open(filename, 'r')
     rgb_data = []
     flow_data = []
@@ -319,22 +319,30 @@ def import_label_rgb_batch2(filename, batch_size, current_sample):
     exists = 1
     
     lines = list(lines)
+
+    lines_len = len(lines)
+
+    sample_start = (current_sample % lines_len)
     
-    for i in range(current_sample, (current_sample+batch_size)):
-        line = lines[i-1].strip('\n').split()
+    for i in range(sample_start, (sample_start+batch_size)):
+        index = (i % lines_len)
+        line = lines[batch_list[index]].strip('\n').split()
         dirname = line[0]
         tmp_label = line[1]
         
         #load the .npy file for rgb
-        rgb_txt = "../../chollec80/chollec80_processed_data_full_batch2/" + dirname + ".npy"
+        rgb_txt = "../../chollec80/cholec80_processed_batch2/chollec80_processed_data_full_batch2/" + dirname + ".npy"
 
         if os.path.isfile(rgb_txt):
+            print("Training video found:")
+            print(dirname) 
             tmp_rgb = np.load(rgb_txt)
         else:
+            print("Training video doesn't exist!")
             exists = 0
             break
 
-        if (i == current_sample):
+        if (i == sample_start):
             rgb_data = tmp_rgb
         else:
             rgb_data = np.concatenate((rgb_data, tmp_rgb), axis=0)
@@ -370,22 +378,28 @@ def import_label_flow_batch2(filename, batch_size, current_sample):
     exists = 1
     
     lines = list(lines)
+
+    lines_len = len(lines)
+
+    sample_start = (current_sample % lines_len)
     
-    for i in range(current_sample, (current_sample+batch_size)):
-        line = lines[i-1].strip('\n').split()
+    for i in range(sample_start, (sample_start+batch_size)):
+        line = lines[i].strip('\n').split()
         dirname = line[0]
         tmp_label = line[1]
         
         #load the .npy file for rgb
-        rgb_txt = "../../chollec80/chollec80_processed_data_full_batch2/" + dirname + ".npy"
+        rgb_txt = "../../chollec80/cholec80_processed_batch2/chollec80_processed_data_full_batch2/" + dirname + ".npy"
 
         if os.path.isfile(rgb_txt):
+            print("Training video found")
             tmp_rgb = np.load(rgb_txt)
         else:
+            print("Training video doesn't exist!")
             exists = 0
             break
 
-        if (i == current_sample):
+        if (i == sample_start):
             rgb_data = tmp_rgb
         else:
             rgb_data = np.concatenate((rgb_data, tmp_rgb), axis=0)
@@ -419,6 +433,40 @@ def assign_class_weights(labels):
     for label in labels:
         print ("Label:")
         print (label)
-        weights.append(class_imbalance_weights[label])
+        weights.append(class_imbalance_weights[int(label)])
 
     return weights
+
+def assign_class_weights_computed(labels, computed_weights):
+    weights = []
+
+    for label in labels:
+        print ("Label:")
+        print (label)
+        weights.append(computed_weights[int(label)])
+
+    return weights
+
+def compute_class_weights(train_file, num_classes, num_samples):
+    weights = np.zeros((num_classes))
+    inv_weights = np.zeros((num_classes))
+
+    lines = open(train_file, 'r')
+
+    for i in range(0, num_samples):
+        line = lines.readline()
+        line_split = line.strip('\n').split()
+
+        tmp_label = int(line_split[1])
+        weights[tmp_label] = weights[tmp_label] + 1
+
+
+    for i in range(0, num_classes):
+        #inv_weights[i] = (1 / weights[i])
+        inv_weights[i] = (weights[i] / num_samples)
+        print(i)
+        print(inv_weights[i])
+
+    return inv_weights
+
+

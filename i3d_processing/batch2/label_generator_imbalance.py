@@ -14,6 +14,8 @@ def run_processing():
                  "51", "52", "53", "54", "55", "56", "57", "58", "59", "60"]
     root_dir = "chollec80_raw_data"
 
+    imbalanced_classes = [0, 2, 4, 5, 6]
+
     list_file_txt_rgb = "chollec80_processed_list_rgb_full_batch2.txt"
     list_file_txt_flow = "chollec80_processed_list_flow_full_batch2.txt"
     subprocess.call(["rm", "-rf", list_file_txt_rgb])
@@ -84,6 +86,44 @@ def run_processing():
                     break
             if (video_done == True):
                 break
+
+        video_done = False
+
+        for hour in range(0, (last_hour+1), 1):
+            for minute in range(0, (60), 1):
+                for second in range(0, (60), 10):
+
+                    line = label_f.readline()
+
+                    if line != '\n':
+                        raw_label = line.split('    ')[1][:-1]
+                    else:
+                        raw_label = 6
+
+                    label = label_decoder(raw_label)
+
+                    if ((label in imbalanced_classes) and (second != 30) and (second != 0)):
+                        label_title_rgb = "video_rgb" + video_id + "_" + str(hour) + "_" + str(minute) + "_" + str(second)
+                        list_file_rgb.write(label_title_rgb)
+                        list_file_rgb.write('   ')
+                        list_file_rgb.write(str(label))
+                        list_file_rgb.write("\n")
+
+                    #skip until the next label
+                    #for this, 30 sec, ideally make this variable length
+                    for t in range(1, 250):
+                        label_f.readline()
+
+                    #if true, exit the loops
+
+                    if (((minute+1) >= last_min) and (hour == last_hour) and (second == 30)):
+                        video_done = True
+                        break
+                if (video_done == True):
+                    break
+            if (video_done == True):
+                break
+
 
 
     list_file_rgb.close()
