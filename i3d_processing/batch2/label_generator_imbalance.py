@@ -102,7 +102,7 @@ def run_processing():
 
                     label = label_decoder(raw_label)
 
-                    if ((label in imbalanced_classes) and (second != 30)):
+                    if ((label in imbalanced_classes) and (second != 30) and (second != 0)):
                         label_title_rgb = "video_rgb" + video_id + "_" + str(hour) + "_" + str(minute) + "_" + str(second)
                         list_file_rgb.write(label_title_rgb)
                         list_file_rgb.write('   ')

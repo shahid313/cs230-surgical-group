@@ -64,7 +64,7 @@ def run_processing():
                     print (label)
                     print (second)
 
-                    if ((label in imbalanced_classes) and (second != 30)):
+                    if ((label in imbalanced_classes) and (second != 30) and (second != 0)):
 
                         subprocess.call(["rm", "-rf", "tmp"])
                         subprocess.call(["mkdir", "tmp"])
