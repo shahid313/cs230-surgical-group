@@ -39,7 +39,7 @@ gpu_num = 1
 offset = 0 #train offset of steps already done
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
 flags.DEFINE_integer('max_steps', 100000, 'Number of steps to run trainer.')
-flags.DEFINE_integer('batch_size', 1, 'Batch size.')
+flags.DEFINE_integer('batch_size', 16, 'Batch size.')
 flags.DEFINE_integer('num_frame_per_clib', 50, 'Nummber of frames per clib')
 flags.DEFINE_integer('crop_size', 224, 'Crop_size')
 flags.DEFINE_integer('rgb_channels', 3, 'RGB_channels for input')
@@ -194,6 +194,16 @@ def run_training():
     file = list(open(train_file, 'r'))
     num_test_videos = len(file)
 
+    #make batches
+    num_batches = int(num_test_videos/FLAGS.batch_size)
+    batch_list = []
+
+    #make an ordered list
+    for l in range(0, (num_batches * FLAGS.batch_size), 1):
+        batch_list[l] = l
+
+    batch_list.shuffle()
+
     current_epoch = 0
     print("Current Epoch: %d" % current_epoch)
 
@@ -216,7 +226,8 @@ def run_training():
         rgb_train_images, flow_train_images, train_labels, exists = input_data.import_label_rgb_batch2(
                       filename=train_file,
                       batch_size=FLAGS.batch_size * gpu_num,
-                      current_sample=sample
+                      current_sample=sample,
+                      batch_list=batch_list
                       )
 
         #actually train the model

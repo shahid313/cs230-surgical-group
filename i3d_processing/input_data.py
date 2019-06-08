@@ -311,7 +311,7 @@ def import_label_flow(filename, batch_size, current_sample):
 
 	return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)
 
-def import_label_rgb_batch2(filename, batch_size, current_sample):
+def import_label_rgb_batch2(filename, batch_size, current_sample, batch_list):
     lines = open(filename, 'r')
     rgb_data = []
     flow_data = []
@@ -325,7 +325,7 @@ def import_label_rgb_batch2(filename, batch_size, current_sample):
     sample_start = (current_sample % lines_len)
     
     for i in range(sample_start, (sample_start+batch_size)):
-        line = lines[i].strip('\n').split()
+        line = lines[batch_list[i]].strip('\n').split()
         dirname = line[0]
         tmp_label = line[1]
         
@@ -333,7 +333,8 @@ def import_label_rgb_batch2(filename, batch_size, current_sample):
         rgb_txt = "../../chollec80/cholec80_processed_batch2/chollec80_processed_data_full_batch2/" + dirname + ".npy"
 
         if os.path.isfile(rgb_txt):
-            print("Training video found")
+            print("Training video found:")
+            print(dirname)
             tmp_rgb = np.load(rgb_txt)
         else:
             print("Training video doesn't exist!")
