@@ -61,6 +61,8 @@ def run_processing():
                     info = label_line.split()
 
                     label = int(label_decoder(info[1]))
+                    print (label)
+                    print (second)
 
                     if ((label in imbalanced_classes) and (second != 30)):
 
