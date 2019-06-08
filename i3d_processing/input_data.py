@@ -325,7 +325,8 @@ def import_label_rgb_batch2(filename, batch_size, current_sample, batch_list):
     sample_start = (current_sample % lines_len)
     
     for i in range(sample_start, (sample_start+batch_size)):
-        line = lines[batch_list[i]].strip('\n').split()
+        index = (i % lines_len)
+        line = lines[batch_list[index]].strip('\n').split()
         dirname = line[0]
         tmp_label = line[1]
         
@@ -334,7 +335,7 @@ def import_label_rgb_batch2(filename, batch_size, current_sample, batch_list):
 
         if os.path.isfile(rgb_txt):
             print("Training video found:")
-            print(dirname)
+            print(dirname) 
             tmp_rgb = np.load(rgb_txt)
         else:
             print("Training video doesn't exist!")
