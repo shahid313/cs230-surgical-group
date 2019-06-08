@@ -289,9 +289,9 @@ def import_label_flow(filename, batch_size, current_sample):
         tmp_flow = np.load(rgb_txt)
         
         if (i == current_sample):
-    		flow_data = tmp_flow
+            flow_data = tmp_flow
         else:
-        	flow_data = np.concatenate((flow_data, tmp_flow), axis=0)
+            flow_data = np.concatenate((flow_data, tmp_flow), axis=0)
         
         #get the correct label
         label.append(int(tmp_label))
@@ -305,11 +305,11 @@ def import_label_flow(filename, batch_size, current_sample):
             flow_data.append(flow_data[-1])
             label.append(int(label[-1]))
 
-	np_arr_rgb_data = np.array(rgb_data).astype(np.float32)
-	np_arr_flow_data = np.array(flow_data).astype(np.float32)
-	np_arr_label = np.array(label).astype(np.int64)
+        np_arr_rgb_data = np.array(rgb_data).astype(np.float32)
+        np_arr_flow_data = np.array(flow_data).astype(np.float32)
+        np_arr_label = np.array(label).astype(np.int64)
 
-	return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)
+        return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size)
 
 def import_label_rgb_batch2(filename, batch_size, current_sample):
     lines = open(filename, 'r')
