@@ -83,43 +83,43 @@ def run_processing():
                             next_second = second+10
 
 
-                    # cut videos in 10s samples
-                    subprocess.call(["ffmpeg", "-i", "proc/video_process.mp4", "-ss", ('%02d' % hour)+":"+('%02d' % minute)+":"+('%02d' % second), "-to", ('%02d' % next_hour)+":"+('%02d' % next_min)+":"+('%02d' % next_second), "tmp/video_process_cropped.mp4"])
+                        # cut videos in 10s samples
+                        subprocess.call(["ffmpeg", "-i", "proc/video_process.mp4", "-ss", ('%02d' % hour)+":"+('%02d' % minute)+":"+('%02d' % second), "-to", ('%02d' % next_hour)+":"+('%02d' % next_min)+":"+('%02d' % next_second), "tmp/video_process_cropped.mp4"])
 
 
-                    #sample the vids into 5 fps
-                    subprocess.call(["ffmpeg", "-i", "tmp/video_process_cropped.mp4", "tmp/thumb%04d.jpg"])
+                        #sample the vids into 5 fps
+                        subprocess.call(["ffmpeg", "-i", "tmp/video_process_cropped.mp4", "tmp/thumb%04d.jpg"])
 
-                    #loop through all images, 5 fps for 10s
-                    for i in range(1, 51):
+                        #loop through all images, 5 fps for 10s
+                        for i in range(1, 51):
 
-                        image_str = "tmp/thumb" + ('%04d' % i) + ".jpg"
-                        image = cv2.imread(image_str, cv2.IMREAD_COLOR)
+                            image_str = "tmp/thumb" + ('%04d' % i) + ".jpg"
+                            image = cv2.imread(image_str, cv2.IMREAD_COLOR)
 
-                        #handle RGB
-                        norm_image_rgb = cv2.normalize(image, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+                            #handle RGB
+                            norm_image_rgb = cv2.normalize(image, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 
-                        #Crop 224x224 samples
+                            #Crop 224x224 samples
 
-                        #reshape
-                        norm_image_rgb_r = norm_image_rgb.reshape(1, 224, 224, 3)
+                            #reshape
+                            norm_image_rgb_r = norm_image_rgb.reshape(1, 224, 224, 3)
 
-                        #Add to RGB numpy
-                        if ( i == 1 ):
-                            rgb_video = norm_image_rgb_r
-                        else:
-                            rgb_video = np.concatenate((rgb_video, norm_image_rgb_r), axis=0)
+                            #Add to RGB numpy
+                            if ( i == 1 ):
+                                rgb_video = norm_image_rgb_r
+                            else:
+                                rgb_video = np.concatenate((rgb_video, norm_image_rgb_r), axis=0)
 
-                        print ("Processed image " + str(i))
+                            print ("Processed image " + str(i))
 
 
-                    rgb_video_r = rgb_video.reshape(1, 50, 224, 224, 3)
+                        rgb_video_r = rgb_video.reshape(1, 50, 224, 224, 3)
 
-                    #when done, copy .npy files for one 10s video clip, RGB and Flow
-                    destination_rgb = destination_dir + "/video_rgb" + video_id + "_" + str(hour) + "_" + str(minute) + "_" + str(second) + ".npy"
-                    np.save(destination_rgb, rgb_video_r)
+                        #when done, copy .npy files for one 10s video clip, RGB and Flow
+                        destination_rgb = destination_dir + "/video_rgb" + video_id + "_" + str(hour) + "_" + str(minute) + "_" + str(second) + ".npy"
+                        np.save(destination_rgb, rgb_video_r)
 
-                    print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute) + " " + str(second))
+                        print("Processed video " + str(video_id) + " " + str(hour) + " " + str(minute) + " " + str(second))
 
                     for t in range(1, 250):
                         label_finder.readline()
