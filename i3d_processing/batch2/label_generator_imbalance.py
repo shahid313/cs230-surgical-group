@@ -54,9 +54,10 @@ def run_processing():
                 for second in range(0, (60), 30):
 
                     line = label_f.readline()
+                    info = line.split()
 
                     if line != '\n':
-                        raw_label = line.split('	')[1][:-1]
+                        raw_label = info[1]
                     else:
                         raw_label = 6
 
@@ -97,9 +98,10 @@ def run_processing():
                 for second in range(0, (60), 10):
 
                     line = label_f.readline()
+                    info = line.split()
 
                     if line != '\n':
-                        raw_label = line.split('    ')[1][:-1]
+                        raw_label = info[1]
                     else:
                         raw_label = 6
 
