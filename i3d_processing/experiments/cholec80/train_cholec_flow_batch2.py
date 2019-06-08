@@ -128,7 +128,7 @@ def run_training():
         print(new_list)
 
         with tf.control_dependencies(update_ops):
-            rgb_grads = opt_rgb.compute_gradients(rgb_loss, var_list=new_list)
+            rgb_grads = opt_rgb.compute_gradients(flow_loss, var_list=new_list)
             apply_gradient_rgb = opt_rgb.apply_gradients(rgb_grads, global_step=global_step)
             train_op = tf.group(apply_gradient_rgb)
             null_op = tf.no_op()
@@ -154,15 +154,19 @@ def run_training():
 
         # Create summary writter
         tf.summary.scalar('accuracy', accuracy)
-        tf.summary.scalar('rgb_loss', rgb_loss)
+        tf.summary.scalar('flow_loss', flow_loss)
         tf.summary.scalar('learning_rate', learning_rate)
         merged = tf.summary.merge_all()
 
     # load pre_train models
     ckpt = tf.train.get_checkpoint_state(rgb_pre_model_save_dir)
     if ckpt and ckpt.model_checkpoint_path:
+
+        ckpt_hardcode = "/home/cheungwz/cs230-surgical-group/i3d_processing/checkpoints/flow_imagenet/model.ckpt"
         print("loading checkpoint %s,waiting......" % ckpt.model_checkpoint_path)
-        rgb_saver.restore(sess, ckpt.model_checkpoint_path)
+        print("loading checkpoint %s,waiting......" % ckpt_hardcode)
+        #rgb_saver.restore(sess, ckpt.model_checkpoint_path)
+        rgb_saver.restore(sess, ckpt_hardcode)
         print("load complete!")
 
     train_writer = tf.summary.FileWriter('./visual_logs/train_flow_imagenet_batch2_resume', sess.graph)
