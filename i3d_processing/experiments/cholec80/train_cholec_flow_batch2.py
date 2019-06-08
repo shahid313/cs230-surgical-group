@@ -110,8 +110,30 @@ def run_training():
 
         #Get the set of variables we wish to update, will pass into 'compute_gradients'
         #For now just do the final inception network and final logits layer, the other layers are frozen
-
+        
         new_list = []
+
+        #train 5a
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'FLOW/inception_i3d/Mixed_5a/Branch_1')
+        new_list.append(var_branch1)
+
+        var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'FLOW/inception_i3d/Mixed_5a/Branch_2')
+        new_list.append(var_branch2)
+
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'FLOW/inception_i3d/Mixed_5a/Branch_3')
+        new_list.append(var_branch3)
+
+        #train 5b
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'FLOW/inception_i3d/Mixed_5b/Branch_1')
+        new_list.append(var_branch1)
+
+        var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'FLOW/inception_i3d/Mixed_5b/Branch_2')
+        new_list.append(var_branch2)
+
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'FLOW/inception_i3d/Mixed_5b/Branch_3')
+        new_list.append(var_branch3)
+
+        #train 5c
         var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'FLOW/inception_i3d/Mixed_5c/Branch_1')
         new_list.append(var_branch1)
 
@@ -121,6 +143,7 @@ def run_training():
         var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'FLOW/inception_i3d/Mixed_5c/Branch_3')
         new_list.append(var_branch3)
 
+        #train logits
         var_logits_final = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'FLOW/inception_i3d/Logits')
         new_list.append(var_logits_final)
 
@@ -161,12 +184,11 @@ def run_training():
     # load pre_train models
     ckpt = tf.train.get_checkpoint_state(rgb_pre_model_save_dir)
     if ckpt and ckpt.model_checkpoint_path:
-
-        ckpt_hardcode = "/home/cheungwz/cs230-surgical-group/i3d_processing/checkpoints/flow_imagenet/model.ckpt"
+        ckpt_path_hardcode = "/home/cheungwz/cs230-surgical-group/i3d_processing/checkpoints/flow_imagenet/model.ckpt"
         print("loading checkpoint %s,waiting......" % ckpt.model_checkpoint_path)
-        print("loading checkpoint %s,waiting......" % ckpt_hardcode)
+        print("loading checkpoint %s,waiting......" % ckpt_path_hardcode)
         #rgb_saver.restore(sess, ckpt.model_checkpoint_path)
-        rgb_saver.restore(sess, ckpt_hardcode)
+        rgb_saver.restore(sess, ckpt_path_hardcode)
         print("load complete!")
 
     train_writer = tf.summary.FileWriter('./visual_logs/train_flow_imagenet_batch2_resume', sess.graph)
@@ -175,7 +197,12 @@ def run_training():
     file = list(open(train_file, 'r'))
     num_test_videos = len(file)
 
-    for step in xrange(FLAGS.max_steps):
+    current_epoch = 0
+    print("Current Epoch: %d" % current_epoch)
+
+    class_imbalance_weights = input_data.compute_class_weights(train_file, FLAGS.classics, num_test_videos)
+
+    for step in range(0, FLAGS.max_steps, FLAGS.batch_size):
         step = offset + step
         start_time = time.time()
 
@@ -198,7 +225,7 @@ def run_training():
         #actually train the model
         if (exists == 1):
             #assign weights to fight class imbalance
-            weight_labels = input_data.assign_class_weights(train_labels)
+            weight_labels = input_data.assign_class_weights_computed(train_labels, class_imbalance_weights)
 
             sess.run(train_op, feed_dict={
                           rgb_images_placeholder: rgb_train_images,
@@ -250,6 +277,11 @@ def run_training():
                 test_writer.add_summary(summary, step)
         if step == 0 or (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             saver.save(sess, os.path.join(model_save_dir, 'i3d_cholec_model'), global_step=step)
+
+        if (int(step / num_test_videos) != current_epoch):
+            current_epoch = current_epoch + 1
+            print("Current Epoch: %d" % current_epoch)
+
     print("done")
 
 
