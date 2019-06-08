@@ -101,7 +101,7 @@ def run_training():
                                     spatial_squeeze=True,
                                     final_endpoint='Logits'
                                     )(rgb_images_placeholder, is_training)
-        rgb_loss = tower_loss_weight_subtract(
+        rgb_loss = tower_loss_weighted(
                                 rgb_logit,
                                 labels_placeholder,
                                 class_weights_placeholder
@@ -185,8 +185,11 @@ def run_training():
     # load pre_train models
     ckpt = tf.train.get_checkpoint_state(rgb_pre_model_save_dir)
     if ckpt and ckpt.model_checkpoint_path:
+        ckpt_path_hardcode = "/home/cheungwz/cs230-surgical-group/i3d_processing/checkpoints/rgb_imagenet/model.ckpt"
         print("loading checkpoint %s,waiting......" % ckpt.model_checkpoint_path)
-        rgb_saver.restore(sess, ckpt.model_checkpoint_path)
+        print("loading checkpoint %s,waiting......" % ckpt_path_hardcode)
+        #rgb_saver.restore(sess, ckpt.model_checkpoint_path)
+        rgb_saver.restore(sess, ckpt_path_hardcode)
         print("load complete!")
 
     train_writer = tf.summary.FileWriter('./visual_logs/train_rgb_imagenet_batch2_resume', sess.graph)
