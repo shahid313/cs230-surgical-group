@@ -130,6 +130,10 @@ def run_training():
         var_logits_final = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Logits')
         new_list.append(var_logits_final)
 
+        #train LSTM
+        var_lstm = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/LSTM')
+        new_list.append(var_lstm)
+
         print("Full list")
         print(new_list)
 
