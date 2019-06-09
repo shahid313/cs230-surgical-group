@@ -142,7 +142,7 @@ def run_training():
         # Create a saver for loading trained checkpoints.
         rgb_variable_map = {}
         for variable in tf.global_variables():
-            if variable.name.split('/')[0] == 'RGB' and 'Adam' not in variable.name.split('/')[-1] and variable.name.split('/')[2] != 'Logits':
+            if variable.name.split('/')[0] == 'RGB' and 'Adam' not in variable.name.split('/')[-1] and variable.name.split('/')[2] != 'Logits' and variable.name.split('/')[2] != 'LSTM':
                 #rgb_variable_map[variable.name.replace(':0', '')[len('RGB/inception_i3d/'):]] = variable
                 rgb_variable_map[variable.name.replace(':0', '')] = variable
         rgb_saver = tf.train.Saver(var_list=rgb_variable_map, reshape=True)
