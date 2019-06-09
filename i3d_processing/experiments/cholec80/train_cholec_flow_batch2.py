@@ -172,7 +172,7 @@ def run_training():
         if (exists == 1):
 
             sess.run(train_op, feed_dict={
-                          rgb_images_placeholder: rgb_train_images,
+                          flow_images_placeholder: flow_train_images,
                           labels_placeholder: train_labels,
                           is_training: True
                           })
