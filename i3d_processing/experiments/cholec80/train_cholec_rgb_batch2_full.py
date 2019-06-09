@@ -137,6 +137,7 @@ def run_training():
                         config=tf.ConfigProto(allow_soft_placement=True,
                                               log_device_placement=True)
                         )
+        print("Watch for Device Placement")
         print(sess.run(init))
         print("Initialization Done")
 
