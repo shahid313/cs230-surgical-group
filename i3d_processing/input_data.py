@@ -424,7 +424,7 @@ def import_label_flow_batch2(filename, batch_size, current_sample):
     
     #make the arrays nice
     if (exists == 1):
-        valid_len = len(rgb_data)
+        valid_len = len(flow_data)
         pad_len = batch_size - valid_len
         if pad_len:
             for i in range(pad_len):
