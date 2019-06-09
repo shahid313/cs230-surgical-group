@@ -270,3 +270,4 @@ def import_label_flow_batch2(filename, batch_size, current_sample):
         np_arr_flow_data = []
         np_arr_label = np.zeros((1))
 
+    return np_arr_flow_data, np_arr_flow_data, np_arr_label.reshape(batch_size), exists
