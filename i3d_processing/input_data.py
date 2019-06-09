@@ -396,14 +396,14 @@ def import_label_flow_batch2(filename, batch_size, current_sample):
         tmp_label = line[1]
         
         #load the .npy file for rgb
-        rgb_txt = "../../chollec80/cholec80_processed_batch2/chollec80_processed_data_full_batch2/" + dirname + ".npy"
+        rgb_txt = "../../chollec80/cholec80_processed_batch2_flow/" + dirname + ".npy"
 
         if os.path.isfile(rgb_txt):
             print("Training video found")
             print(dirname)
             tmp_rgb = np.load(rgb_txt)
         else:
-            rgb_txt = "../../chollec80/cholec80_processed_batch2/chollec80_processed_data_full_batch2_imb/" + dirname + ".npy"
+            rgb_txt = "../../chollec80/cholec80_processed_batch2_flow/" + dirname + ".npy"
 
             if os.path.isfile(rgb_txt):
                 print("Training video found")
