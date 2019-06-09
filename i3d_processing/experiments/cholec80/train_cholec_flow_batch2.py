@@ -168,6 +168,8 @@ def run_training():
                       current_sample=sample
                       )
 
+        print (flow_train_images.shape())
+
         #actually train the model
         if (exists == 1):
 
