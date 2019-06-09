@@ -111,6 +111,8 @@ def run_training():
         #Get the set of variables we wish to update, will pass into 'compute_gradients'
         #For now just do the final inception network and final logits layer, the other layers are frozen
 
+        new_list = []
+
         #train 5a
         var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'FLOW/inception_i3d/Mixed_5a/Branch_1')
         new_list.append(var_branch1)
