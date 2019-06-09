@@ -415,9 +415,9 @@ def import_label_flow_batch2(filename, batch_size, current_sample):
                 break
 
         if (i == sample_start):
-            rgb_data = tmp_rgb
+            flow_data = tmp_rgb
         else:
-            rgb_data = np.concatenate((rgb_data, tmp_rgb), axis=0)
+            flow_data = np.concatenate((flow_data, tmp_rgb), axis=0)
         
         #get the correct label
         label.append(int(tmp_label))
