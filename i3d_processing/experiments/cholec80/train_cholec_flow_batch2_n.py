@@ -23,6 +23,7 @@ import numpy
 from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
 import input_data
+import input_test
 import math
 import numpy as np
 from i3d import InceptionI3d
