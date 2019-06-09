@@ -100,7 +100,7 @@ def run_training():
             rgb_logit, _ = InceptionI3dLSTM(
                                     num_classes=FLAGS.classics,
                                     spatial_squeeze=True,
-                                    final_endpoint='Logits'
+                                    final_endpoint='LSTM'
                                     )(rgb_images_placeholder, is_training)
             
         rgb_loss = tower_loss_weight_subtract(
@@ -110,6 +110,9 @@ def run_training():
                                 )
         accuracy = tower_acc(rgb_logit, labels_placeholder)
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+
+        list_var = tf.trainable_variables()
+        print(list_var)
 
         new_list = []
 
