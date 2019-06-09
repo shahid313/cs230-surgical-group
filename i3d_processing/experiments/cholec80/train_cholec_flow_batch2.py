@@ -151,7 +151,7 @@ def run_training():
         print(new_list)
 
         with tf.control_dependencies(update_ops):
-            rgb_grads = opt_rgb.compute_gradients(rgb_loss, var_list=new_list)
+            rgb_grads = opt_rgb.compute_gradients(flow_loss, var_list=new_list)
             apply_gradient_rgb = opt_rgb.apply_gradients(rgb_grads, global_step=global_step)
             train_op = tf.group(apply_gradient_rgb)
             null_op = tf.no_op()
