@@ -104,8 +104,11 @@ def run_training():
                                     final_endpoint='Logits'
                                     )(rgb_images_placeholder, is_training)
 
+
+        print(rgb_logit.shape())
+
         with tf.variable_scope('RGB_LSTM'):
-            rgb_logit = I3D_LSTM(num_classes=FLAGS.classics,
+            rgb_logit = i3d_lstm.I3D_LSTM(num_classes=FLAGS.classics,
                                  cell_size=200,
                                  num_features=rgb_logit.shape())
             
@@ -160,6 +163,9 @@ def run_training():
 
     file = list(open(train_file, 'r'))
     num_test_videos = len(file)
+
+    file_test = list(open(test_file, 'r'))
+    num_dev_test_videos = len(file_test)
 
     #make batches
     num_batches = int(num_test_videos/FLAGS.batch_size)
@@ -231,7 +237,7 @@ def run_training():
 
             print('Validation Data Eval:')
             #TODO: Fix to select random sample from entire test list
-            sample_a = randint(0, 50, 1)
+            sample_a = randint(0, (num_dev_test_videos-FLAGS.batch_size), 1)
             sample = sample_a[0]
             rgb_val_images, flow_val_images, val_labels, exists = input_test.import_label_rgb_batch2(
                             filename=test_file,
