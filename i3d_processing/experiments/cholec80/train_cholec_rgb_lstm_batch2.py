@@ -104,14 +104,10 @@ def run_training():
                                     final_endpoint='Logits'
                                     )(rgb_images_placeholder, is_training)
 
-        print("LOGIT shape")
-        print(rgb_logit)
-        print("ANGAD")
-
         with tf.variable_scope('RGB_LSTM'):
             rgb_logit = i3d_lstm.I3D_LSTM(num_classes=FLAGS.classics,
                                  cell_size=200,
-                                 num_features=rgb_logit.shape())
+                                 num_features=16)
             
         rgb_loss = tower_loss_weight_subtract(
                                 rgb_logit,
