@@ -95,12 +95,13 @@ def run_training():
         learning_rate = tf.train.exponential_decay(FLAGS.learning_rate, global_step, decay_steps=3000, decay_rate=0.1, staircase=True)
         opt_rgb = tf.train.AdamOptimizer(learning_rate)
         #opt_stable = tf.train.MomentumOptimizer(learning_rate, 0.9)
-        with tf.variable_scope('RGB'):
-            rgb_logit, _ = InceptionI3d(
-                                    num_classes=FLAGS.classics,
-                                    spatial_squeeze=True,
-                                    final_endpoint='Logits'
-                                    )(rgb_images_placeholder, is_training)
+        with tf.device('/GPU:0'):
+            with tf.variable_scope('RGB'):
+                rgb_logit, _ = InceptionI3d(
+                                        num_classes=FLAGS.classics,
+                                        spatial_squeeze=True,
+                                        final_endpoint='Logits'
+                                        )(rgb_images_placeholder, is_training)
         rgb_loss = tower_loss_weight_subtract(
                                 rgb_logit,
                                 labels_placeholder,
@@ -212,11 +213,10 @@ def run_training():
 
         # Create a session for running Ops on the Graph.
         sess = tf.Session(
-                        config=tf.ConfigProto(allow_soft_placement=True,
-                                              log_device_placement=True)
+                        config=tf.ConfigProto(allow_soft_placement=True)
                         )
         print("Watch for Device Placement")
-        print(sess.run(init))
+        sess.run(init)
         print("Initialization Done")
 
         # Create summary writter
