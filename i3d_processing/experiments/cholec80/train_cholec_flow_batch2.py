@@ -173,8 +173,7 @@ def run_training():
 
             sess.run(train_op, feed_dict={
                           rgb_images_placeholder: rgb_train_images,
-                          labels_placeholder: train_labels,
-                          class_weights_placeholder: weight_labels,
+                          labels_placeholder: train_labels
                           is_training: True
                           })
 
