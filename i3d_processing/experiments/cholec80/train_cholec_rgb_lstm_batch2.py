@@ -26,8 +26,7 @@ import input_data
 import input_test
 import math
 import numpy as np
-import i3d_lstm
-from i3d import InceptionI3d
+from i3d_lstm_n import InceptionI3dLSTM
 from utils import *
 from tensorflow.python import pywrap_tensorflow
 from numpy.random import seed
@@ -98,16 +97,11 @@ def run_training():
         opt_rgb = tf.train.AdamOptimizer(learning_rate)
         #opt_stable = tf.train.MomentumOptimizer(learning_rate, 0.9)
         with tf.variable_scope('RGB'):
-            rgb_logit, _ = InceptionI3d(
+            rgb_logit, _ = InceptionI3dLSTM(
                                     num_classes=FLAGS.classics,
                                     spatial_squeeze=True,
                                     final_endpoint='Logits'
                                     )(rgb_images_placeholder, is_training)
-
-        with tf.variable_scope('RGB_LSTM'):
-            rgb_logit = i3d_lstm.I3D_LSTM(num_classes=FLAGS.classics,
-                                 cell_size=200,
-                                 num_features=16)
             
         rgb_loss = tower_loss_weight_subtract(
                                 rgb_logit,
