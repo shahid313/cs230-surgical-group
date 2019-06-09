@@ -35,7 +35,7 @@ from random import shuffle
 
 # Basic model parameters as external flags.
 flags = tf.app.flags
-resume = 0 #whether to start from scratch or resume from pre-trained
+resume = 1 #whether to start from scratch or resume from pre-trained
 gpu_num = 1
 offset = 0 #train offset of steps already done
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
@@ -111,6 +111,9 @@ def run_training():
 
         #Get the set of variables we wish to update, will pass into 'compute_gradients'
         #For now just do the final inception network and final logits layer, the other layers are frozen
+
+        list_var = tf.trainable_variables()
+        print(list_var)
 
         new_list = []
 
