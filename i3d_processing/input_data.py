@@ -322,10 +322,10 @@ def import_label_rgb_batch2(filename, batch_size, current_sample, batch_list):
 
     lines_len = len(lines)
 
-    sample_start = (current_sample % lines_len)
+    sample_start = (current_sample % (lines_len-batch_size))
     
     for i in range(sample_start, (sample_start+batch_size)):
-        index = (i % lines_len)
+        index = (i % (lines_len-batch_size))
         line = lines[batch_list[index]].strip('\n').split()
         dirname = line[0]
         tmp_label = line[1]
