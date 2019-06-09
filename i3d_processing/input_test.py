@@ -181,6 +181,7 @@ def import_label_rgb_batch2(filename, batch_size, current_sample):
 
         if os.path.isfile(rgb_txt):
             print("Training video found")
+            print(dirname)
             tmp_rgb = np.load(rgb_txt)
         else:
             print("Training video doesn't exist!")
