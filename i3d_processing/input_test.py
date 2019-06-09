@@ -245,16 +245,16 @@ def import_label_flow_batch2(filename, batch_size, current_sample):
             break
 
         if (i == sample_start):
-            rgb_data = tmp_rgb
+            flow_data = tmp_rgb
         else:
-            rgb_data = np.concatenate((rgb_data, tmp_rgb), axis=0)
+            flow_data = np.concatenate((flow_data, tmp_rgb), axis=0)
         
         #get the correct label
         label.append(int(tmp_label))
     
     #make the arrays nice
     if (exists == 1):
-        valid_len = len(rgb_data)
+        valid_len = len(flow_data)
         pad_len = batch_size - valid_len
         if pad_len:
             for i in range(pad_len):
@@ -270,4 +270,4 @@ def import_label_flow_batch2(filename, batch_size, current_sample):
         np_arr_flow_data = []
         np_arr_label = np.zeros((1))
 
-    return np_arr_flow_data, np_arr_flow_data, np_arr_label.reshape(batch_size), exists
+    return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size), exists
