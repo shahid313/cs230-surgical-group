@@ -476,11 +476,13 @@ class InceptionI3dLSTM(snt.AbstractModule):
     end_points[end_point] = averaged_logits
     if self._final_endpoint == end_point: return averaged_logits, end_points
 
+    print(logits)
     end_point = 'LSTM'
     with tf.variable_scope(end_point):
       #LSTM with 200 hidden units
       layer ={ 'weights': tf.Variable(tf.random_normal([200, self._num_classes])),'bias': tf.Variable(tf.random_normal([self._num_classes]))}
       lstm_cell = rnn.BasicLSTMCell(200)
+      print("Logits")
       print (logits)
       lstm_logits, states = rnn.static_rnn(lstm_cell, logits, dtype=tf.float32)
       output = tf.matmul(lstm_logits[-1], layer['weights']) + layer['bias']
