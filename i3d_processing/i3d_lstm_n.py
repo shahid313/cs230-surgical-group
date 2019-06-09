@@ -110,6 +110,7 @@ class InceptionI3dLSTM(snt.AbstractModule):
       'Mixed_5b',
       'Mixed_5c',
       'Logits',
+      'LSTM',
       'Predictions',
   )
 
@@ -137,7 +138,7 @@ class InceptionI3dLSTM(snt.AbstractModule):
     if final_endpoint not in self.VALID_ENDPOINTS:
       raise ValueError('Unknown final endpoint %s' % final_endpoint)
 
-    super(InceptionI3d, self).__init__(name=name)
+    super(InceptionI3dLSTM, self).__init__(name=name)
     self._num_classes = num_classes
     self._spatial_squeeze = spatial_squeeze
     self._final_endpoint = final_endpoint
