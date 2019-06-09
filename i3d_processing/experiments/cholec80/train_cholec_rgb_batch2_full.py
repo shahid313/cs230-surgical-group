@@ -132,9 +132,10 @@ def run_training():
 
         # Create a session for running Ops on the Graph.
         sess = tf.Session(
-                        config=tf.ConfigProto(allow_soft_placement=True)
+                        config=tf.ConfigProto(allow_soft_placement=True,
+                                              log_device_placement=True)
                         )
-        sess.run(init)
+        print(sess.run(init))
         print("Initialization Done")
 
         # Create summary writter
