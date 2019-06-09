@@ -106,6 +106,7 @@ def run_training():
 
         print("LOGIT shape")
         print(rgb_logit.shape())
+        print("ANGAD")
 
         with tf.variable_scope('RGB_LSTM'):
             rgb_logit = i3d_lstm.I3D_LSTM(num_classes=FLAGS.classics,
