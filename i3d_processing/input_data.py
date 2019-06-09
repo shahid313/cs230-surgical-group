@@ -377,7 +377,7 @@ def import_label_rgb_batch2(filename, batch_size, current_sample, batch_list):
 
     return np_arr_rgb_data, np_arr_flow_data, np_arr_label.reshape(batch_size), exists
 
-def import_label_flow_batch2(filename, batch_size, current_sample):
+def import_label_flow_batch2(filename, batch_size, current_sample, batch_list):
     lines = open(filename, 'r')
     rgb_data = []
     flow_data = []
@@ -388,10 +388,11 @@ def import_label_flow_batch2(filename, batch_size, current_sample):
 
     lines_len = len(lines)
 
-    sample_start = (current_sample % lines_len)
+    sample_start = (current_sample % (lines_len-batch_size))
     
     for i in range(sample_start, (sample_start+batch_size)):
-        line = lines[i].strip('\n').split()
+        index = (i % (lines_len-batch_size))
+        line = lines[batch_list[index]].strip('\n').split()
         dirname = line[0]
         tmp_label = line[1]
         

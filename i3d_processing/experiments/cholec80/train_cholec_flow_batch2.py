@@ -39,7 +39,7 @@ gpu_num = 1
 offset = 0 #train offset of steps already done
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
 flags.DEFINE_integer('max_steps', 20000, 'Number of steps to run trainer.')
-flags.DEFINE_integer('batch_size', 1, 'Batch size.')
+flags.DEFINE_integer('batch_size', 16, 'Batch size.')
 flags.DEFINE_integer('num_frame_per_clib', 50, 'Nummber of frames per clib')
 flags.DEFINE_integer('crop_size', 224, 'Crop_size')
 flags.DEFINE_integer('rgb_channels', 3, 'RGB_channels for input')
@@ -199,6 +199,19 @@ def run_training():
     file = list(open(train_file, 'r'))
     num_test_videos = len(file)
 
+    file_test = list(open(test_file, 'r'))
+    num_dev_test_videos = len(file_test)
+
+    #make batches
+    num_batches = int(num_test_videos/FLAGS.batch_size)
+    batch_list = []
+
+    #make an ordered list
+    for l in range(0, (num_batches * FLAGS.batch_size), 1):
+        batch_list.append(l)
+
+    shuffle(batch_list)
+
     current_epoch = 0
     print("Current Epoch: %d" % current_epoch)
 
@@ -251,7 +264,7 @@ def run_training():
 
             print('Validation Data Eval:')
             #TODO: Fix to select random sample from entire test list
-            sample_a = randint(0, 50, 1)
+            sample_a = randint(0, (num_dev_test_videos-FLAGS.batch_size), 1)
             sample = sample_a[0]
             rgb_val_images, flow_val_images, val_labels, exists = input_test.import_label_flow_batch2(
                             filename=test_file,
