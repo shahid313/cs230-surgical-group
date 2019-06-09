@@ -481,7 +481,7 @@ class InceptionI3dLSTM(snt.AbstractModule):
       #LSTM with 200 hidden units
       layer ={ 'weights': tf.Variable(tf.random_normal([200, self._num_classes])),'bias': tf.Variable(tf.random_normal([self._num_classes]))}
       lstm_cell = rnn.BasicLSTMCell(200)
-      lstm_logits, states = rnn.static_rnn(lstm_cell, averaged_logits, dtype=tf.float32)
+      lstm_logits, states = rnn.static_rnn(lstm_cell, logits, dtype=tf.float32)
       output = tf.matmul(lstm_logits[-1], layer['weights']) + layer['bias']
     if self._final_endpoint == end_point: return output, end_points
 
