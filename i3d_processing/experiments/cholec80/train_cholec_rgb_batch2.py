@@ -117,7 +117,36 @@ def run_training():
 
         new_list = []
 
+        #train 4f
+        var_branch0 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_4e/Branch_0')
+        new_list.append(var_branch0)
+
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_4e/Branch_1')
+        new_list.append(var_branch1)
+
+        var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_4e/Branch_2')
+        new_list.append(var_branch2)
+
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_4e/Branch_3')
+        new_list.append(var_branch3)
+
+        #train 4f
+        var_branch0 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_4f/Branch_0')
+        new_list.append(var_branch0)
+
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_4f/Branch_1')
+        new_list.append(var_branch1)
+
+        var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_4f/Branch_2')
+        new_list.append(var_branch2)
+
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_4f/Branch_3')
+        new_list.append(var_branch3)
+
         #train 5a
+        var_branch0 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5a/Branch_0')
+        new_list.append(var_branch0)
+
         var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5a/Branch_1')
         new_list.append(var_branch1)
 
@@ -128,6 +157,9 @@ def run_training():
         new_list.append(var_branch3)
 
         #train 5b
+        var_branch0 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_0')
+        new_list.append(var_branch0)
+
         var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_1')
         new_list.append(var_branch1)
 
@@ -138,6 +170,9 @@ def run_training():
         new_list.append(var_branch3)
 
         #train 5c
+        var_branch0 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_0')
+        new_list.append(var_branch0)
+
         var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_1')
         new_list.append(var_branch1)
 
