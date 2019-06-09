@@ -486,7 +486,7 @@ class InceptionI3dLSTM(snt.AbstractModule):
       lstm_cell = rnn.BasicLSTMCell(16)
       print("LSTM")
       print(lstm_cell)
-      lstm_logits, states = rnn.static_rnn(lstm_cell, averaged_logits, dtype=tf.float32)
+      lstm_logits, states = rnn.static_rnn(lstm_cell, [averaged_logits], dtype=tf.float32)
       output = tf.matmul(lstm_logits[-1], layer['weights']) + layer['bias']
     if self._final_endpoint == end_point: return output, end_points
 
