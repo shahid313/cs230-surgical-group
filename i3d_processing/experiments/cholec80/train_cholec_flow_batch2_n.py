@@ -34,14 +34,15 @@ flags = tf.app.flags
 gpu_num = 1
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
 flags.DEFINE_integer('max_steps', 20000, 'Number of steps to run trainer.')
-flags.DEFINE_integer('batch_size', 6, 'Batch size.')
-flags.DEFINE_integer('num_frame_per_clib', 64, 'Nummber of frames per clib')
+flags.DEFINE_integer('batch_size', 1, 'Batch size.')
+flags.DEFINE_integer('num_frame_per_clib', 50, 'Nummber of frames per clib')
 flags.DEFINE_integer('crop_size', 224, 'Crop_size')
 flags.DEFINE_integer('rgb_channels', 3, 'RGB_channels for input')
 flags.DEFINE_integer('flow_channels', 2, 'FLOW_channels for input')
 flags.DEFINE_integer('classics', 101, 'The num of class')
 FLAGS = flags.FLAGS
-model_save_dir = './models/flow_scratch_20000_6_64_0.0001_decay'
+train_file = '../../list/chollec80_processed_list_flow_full_batch2.txt'
+test_file = '../../list/chollec80_processed_list_test_flow_full_batch2.txt'
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 
@@ -50,10 +51,23 @@ def run_training():
     # Get the sets of images and labels for training, validation, and
     # Tell TensorFlow that the model will be built into the default Graph.
 
+    #seed RNG
+    seed(1)
+
+    if (resume == 0):
+        model_save_dir = './models/flow_imagenet_batch2_resume'
+    else:
+        model_save_dir = './models/flow_imagenet_batch2_resume_next'
+
     # Create model directory
     if not os.path.exists(model_save_dir):
         os.makedirs(model_save_dir)
-    flow_pre_model_save_dir = "/home/project/I3D/I3D/checkpoints/flow_scratch"
+    if (resume == 0):
+        print("Loading pretrained original")
+        flow_pre_model_save_dir = "../../checkpoints/flow_scratch"
+    else:
+        print("Loading pretrained cholec80")
+        flow_pre_model_save_dir = "./models/flow_imagenet_batch2_resume"
 
     with tf.Graph().as_default():
         global_step = tf.get_variable(
@@ -121,57 +135,94 @@ def run_training():
         flow_saver.restore(sess, ckpt.model_checkpoint_path)
         print("load complete!")
 
-    train_writer = tf.summary.FileWriter('./visual_logs/train_flow_scratch_20000_6_64_0.0001_decay', sess.graph)
-    test_writer = tf.summary.FileWriter('./visual_logs/test_flow_scratch_20000_6_64_0.0001_decay', sess.graph)
+    train_writer = tf.summary.FileWriter('./visual_logs/train_flow_imagenet_batch2_resume', sess.graph)
+    test_writer = tf.summary.FileWriter('./visual_logs/test_flow_imagenet_batch2_resume', sess.graph)
+
+    file = list(open(train_file, 'r'))
+    num_test_videos = len(file)
+
+    current_epoch = 0
+    print("Current Epoch: %d" % current_epoch)
+
     for step in xrange(FLAGS.max_steps):
+        step = offset + step
         start_time = time.time()
-        rgb_train_images, flow_train_images, train_labels, _, _, _ = input_data.read_clip_and_label(
-                      filename='../../list/ucf_list/train_flow.list',
+
+        #Get a sample to test
+        sample_a = randint(0, num_test_videos, 1)
+        sample = sample_a[0]
+
+        #if we want linear training
+        sample = step
+
+        print ("Training sample: %d" % (sample))
+
+        rgb_train_images, flow_train_images, train_labels, exists = input_data.import_label_flow_batch2(
+                      filename=train_file,
                       batch_size=FLAGS.batch_size * gpu_num,
-                      num_frames_per_clip=FLAGS.num_frame_per_clib,
-                      crop_size=FLAGS.crop_size,
-                      shuffle=True
+                      current_sample=sample
                       )
-        sess.run(train_op, feed_dict={
-                      flow_images_placeholder: flow_train_images,
-                      labels_placeholder: train_labels,
-                      is_training: True
-                      })
+
+        #actually train the model
+        if (exists == 1):
+            #assign weights to fight class imbalance
+            weight_labels = input_data.assign_class_weights_computed(train_labels, class_imbalance_weights)
+
+            sess.run(train_op, feed_dict={
+                          rgb_images_placeholder: rgb_train_images,
+                          labels_placeholder: train_labels,
+                          class_weights_placeholder: weight_labels,
+                          is_training: True
+                          })
+
         duration = time.time() - start_time
         print('Step %d: %.3f sec' % (step, duration))
 
         # Save a checkpoint and evaluate the model periodically.
         if step % 10 == 0 or (step + 1) == FLAGS.max_steps:
-            print('Training Data Eval:')
-            summary, acc, loss_flow = sess.run(
-                            [merged, accuracy, flow_loss],
-                            feed_dict={
-                                       flow_images_placeholder: flow_train_images,
-                                       labels_placeholder: train_labels,
-                                       is_training: False
-                                      })
-            print("accuracy: " + "{:.5f}".format(acc))
-            print("flow_loss: " + "{:.5f}".format(loss_flow))
-            train_writer.add_summary(summary, step)
+
+            if (exists == 1):
+                print('Training Data Eval:')
+                summary, acc, loss_flow = sess.run(
+                                [merged, accuracy, flow_loss],
+                                feed_dict={
+                                           flow_images_placeholder: flow_train_images,
+                                           labels_placeholder: train_labels,
+                                           is_training: False
+                                          })
+                print("accuracy: " + "{:.5f}".format(acc))
+                print("flow_loss: " + "{:.5f}".format(loss_flow))
+                train_writer.add_summary(summary, step)
+
             print('Validation Data Eval:')
-            rgb_val_images, flow_val_images, val_labels, _, _, _ = input_data.read_clip_and_label(
-                            filename='../../list/ucf_list/test_flow.list',
+            #TODO: Fix to select random sample from entire test list
+            sample_a = randint(0, 50, 1)
+            sample = sample_a[0]
+            rgb_val_images, flow_val_images, val_labels, exists = input_test.import_label_flow_batch2(
+                            filename=test_file,
                             batch_size=FLAGS.batch_size * gpu_num,
-                            num_frames_per_clip=FLAGS.num_frame_per_clib,
-                            crop_size=FLAGS.crop_size,
-                            shuffle=True
+                            current_sample=sample
                             )
-            summary, acc = sess.run(
-                            [merged, accuracy],
-                            feed_dict={
-                                        flow_images_placeholder: flow_val_images,
-                                        labels_placeholder: val_labels,
-                                        is_training: False
-                                      })
-            print("accuracy: " + "{:.5f}".format(acc))
-            test_writer.add_summary(summary, step)
-        if (step+1) % 3000 == 0 or (step + 1) == FLAGS.max_steps:
+
+            if (exists == 1):
+                summary, acc = sess.run(
+                                [merged, accuracy],
+                                feed_dict={
+                                            flow_images_placeholder: flow_val_images,
+                                            labels_placeholder: val_labels,
+                                            is_training: False
+                                          })
+                print("accuracy: " + "{:.5f}".format(acc))
+                test_writer.add_summary(summary, step)
+
+        if step == 0 or (step+1) % 5 == 0 or (step + 1) == FLAGS.max_steps:
             saver.save(sess, os.path.join(model_save_dir, 'i3d_ucf_model'), global_step=step)
+
+
+        if (int(step / num_test_videos) != current_epoch):
+            current_epoch = current_epoch + 1
+            print("Current Epoch: %d" % current_epoch)
+            
     print("done")
 
 
