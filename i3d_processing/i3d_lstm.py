@@ -48,4 +48,6 @@ def I3D_LSTM(num_classes, cell_size, num_features):
 
   output = tf.matmul(outputs[-1], layer['weights']) + layer['bias']
 
+  return output
+
 
