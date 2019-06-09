@@ -27,6 +27,7 @@ from __future__ import print_function
 
 import sonnet as snt
 import tensorflow as tf
+from tensorflow.contrib import rnn
 
 def I3D_LSTM(num_classes, cell_size, num_features):
 
