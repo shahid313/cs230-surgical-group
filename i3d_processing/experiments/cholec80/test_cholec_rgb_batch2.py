@@ -120,6 +120,7 @@ def run_training():
             print('TOP_1_ACC in test: %f , time use: %.3f' % (top1, duration))
             print(len(top1_list))
             print('TOP_1_ACC in test: %f' % np.mean(top1_list))
+            print(confusion_matrix)
             print("done")
 
     print ("Done Testing")
