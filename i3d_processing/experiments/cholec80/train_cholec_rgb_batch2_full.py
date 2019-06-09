@@ -128,7 +128,9 @@ def run_training():
 
         # Create a saver for writing training checkpoints.
         saver = tf.train.Saver()
-        init = tf.global_variables_initializer()
+
+        with tf.device('/GPU:0'):
+            init = tf.global_variables_initializer()
 
         # Create a session for running Ops on the Graph.
         sess = tf.Session(
