@@ -177,7 +177,7 @@ def run_training():
 
         # Create summary writter
         tf.summary.scalar('accuracy', accuracy)
-        tf.summary.scalar('rgb_loss', rgb_loss)
+        tf.summary.scalar('flow_loss', flow_loss)
         tf.summary.scalar('learning_rate', learning_rate)
         merged = tf.summary.merge_all()
 
@@ -241,14 +241,14 @@ def run_training():
             if (exists == 1):
                 print('Training Data Eval:')
                 summary, acc, loss_rgb = sess.run(
-                                [merged, accuracy, rgb_loss],
+                                [merged, accuracy, flow_loss],
                                 feed_dict={rgb_images_placeholder: rgb_train_images,
                                            labels_placeholder: train_labels,
                                            class_weights_placeholder: weight_labels,
                                            is_training: False
                                           })
                 print("accuracy: " + "{:.5f}".format(acc))
-                print("rgb_loss: " + "{:.5f}".format(loss_rgb))
+                print("flow_loss: " + "{:.5f}".format(loss_rgb))
                 train_writer.add_summary(summary, step)
 
             print('Validation Data Eval:')
