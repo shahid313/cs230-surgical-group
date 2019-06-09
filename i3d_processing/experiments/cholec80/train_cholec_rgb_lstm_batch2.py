@@ -104,7 +104,7 @@ def run_training():
                                     final_endpoint='Logits'
                                     )(rgb_images_placeholder, is_training)
 
-
+        print("LOGIT shape")
         print(rgb_logit.shape())
 
         with tf.variable_scope('RGB_LSTM'):
