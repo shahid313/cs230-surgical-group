@@ -28,6 +28,8 @@ import numpy as np
 from i3d import InceptionI3d
 from utils import *
 from tensorflow.python import pywrap_tensorflow
+from numpy.random import seed
+from numpy.random import randint
 
 # Basic model parameters as external flags.
 flags = tf.app.flags
@@ -222,7 +224,7 @@ def run_training():
         if (int(step / num_test_videos) != current_epoch):
             current_epoch = current_epoch + 1
             print("Current Epoch: %d" % current_epoch)
-            
+
     print("done")
 
 
