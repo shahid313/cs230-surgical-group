@@ -105,7 +105,7 @@ def run_training():
                                     )(rgb_images_placeholder, is_training)
 
         print("LOGIT shape")
-        print(rgb_logit.shape())
+        print(rgb_logit)
         print("ANGAD")
 
         with tf.variable_scope('RGB_LSTM'):
