@@ -117,6 +117,25 @@ def run_training():
         accuracy = tower_acc(rgb_logit, labels_placeholder)
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
 
+        new_list = []
+
+        #train 5c
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_1')
+        new_list.append(var_branch1)
+
+        var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_2')
+        new_list.append(var_branch2)
+
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_3')
+        new_list.append(var_branch3)
+
+        #train logits
+        var_logits_final = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Logits')
+        new_list.append(var_logits_final)
+
+        print("Full list")
+        print(new_list)
+
         with tf.control_dependencies(update_ops):
             rgb_grads = opt_rgb.compute_gradients(rgb_loss, var_list=new_list)
             apply_gradient_rgb = opt_rgb.apply_gradients(rgb_grads, global_step=global_step)
