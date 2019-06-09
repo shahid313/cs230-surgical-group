@@ -40,7 +40,7 @@ gpu_num = 1
 offset = 0 #train offset of steps already done
 flags.DEFINE_float('learning_rate', 0.0001, 'Initial learning rate.')
 flags.DEFINE_integer('max_steps', 20000, 'Number of steps to run trainer.')
-flags.DEFINE_integer('batch_size', 16, 'Batch size.')
+flags.DEFINE_integer('batch_size', 1, 'Batch size.')
 flags.DEFINE_integer('num_frame_per_clib', 50, 'Nummber of frames per clib')
 flags.DEFINE_integer('crop_size', 224, 'Crop_size')
 flags.DEFINE_integer('rgb_channels', 3, 'RGB_channels for input')
