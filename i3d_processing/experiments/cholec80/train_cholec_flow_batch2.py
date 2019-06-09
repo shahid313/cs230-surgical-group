@@ -69,7 +69,7 @@ def run_training():
         os.makedirs(model_save_dir)
     if (resume == 0):
         print("Loading pretrained original")
-        rgb_pre_model_save_dir = "../../checkpoints/flow_imagenet"
+        rgb_pre_model_save_dir = "../../checkpoints/flow_scratch"
     else:
         print("Loading pretrained cholec80")
         rgb_pre_model_save_dir = "./models/flow_imagenet_batch2_resume"
