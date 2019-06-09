@@ -31,6 +31,7 @@ from utils import *
 from tensorflow.python import pywrap_tensorflow
 from numpy.random import seed
 from numpy.random import randint
+from random import shuffle
 
 # Basic model parameters as external flags.
 flags = tf.app.flags
