@@ -232,7 +232,8 @@ def run_training():
         rgb_train_images, flow_train_images, train_labels, exists = input_data.import_label_flow_batch2(
                       filename=train_file,
                       batch_size=FLAGS.batch_size * gpu_num,
-                      current_sample=sample
+                      current_sample=sample,
+                      batch_list=batch_list
                       )
 
         #actually train the model
