@@ -105,8 +105,61 @@ def run_training():
                                 )
         accuracy = tower_acc(flow_logit, labels_placeholder)
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+        
+        list_var = tf.trainable_variables()
+        print(list_var)
+
+        new_list = []
+
+        #train 5a
+        var_branch0 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5a/Branch_0')
+        new_list.append(var_branch0)
+
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5a/Branch_1')
+        new_list.append(var_branch1)
+
+        var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5a/Branch_2')
+        new_list.append(var_branch2)
+
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5a/Branch_3')
+        new_list.append(var_branch3)
+
+        #train 5b
+        var_branch0 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_0')
+        new_list.append(var_branch0)
+
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_1')
+        new_list.append(var_branch1)
+
+        var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_2')
+        new_list.append(var_branch2)
+
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5b/Branch_3')
+        new_list.append(var_branch3)
+
+        #train 5c
+        var_branch0 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_0')
+        new_list.append(var_branch0)
+
+        var_branch1 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_1')
+        new_list.append(var_branch1)
+
+        var_branch2 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_2')
+        new_list.append(var_branch2)
+
+        var_branch3 = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Mixed_5c/Branch_3')
+        new_list.append(var_branch3)
+
+        #train logits
+        var_logits_final = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'RGB/inception_i3d/Logits')
+        new_list.append(var_logits_final)
+
+        print("Full list")
+        print(new_list)
+
+
         with tf.control_dependencies(update_ops):
-            flow_grads = opt_flow.compute_gradients(flow_loss)
+            flow_grads = opt_flow.compute_gradients(flow_loss, var_list=new_list)
             apply_gradient_flow = opt_flow.apply_gradients(flow_grads, global_step=global_step)
             train_op = tf.group(apply_gradient_flow)
             null_op = tf.no_op()
